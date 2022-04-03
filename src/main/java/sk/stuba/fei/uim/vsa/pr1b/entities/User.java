@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.vsa.pr1b.entities;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @NamedQuery(name = User.Queries.findAll, query="select user from User user")
 @NamedQuery(name = User.Queries.findById, query = "select user from User user where user.id = :id")
@@ -18,8 +19,8 @@ public class User {
     private String surname;
     private String email;
 
-    @OneToOne
-    private Car car;
+    @OneToMany
+    private List<Car> car;
 
     public User(String name, String surname, String email) {
         this.name = name;
@@ -58,11 +59,11 @@ public class User {
         this.email = email;
     }
 
-    public Car getCar() {
+    public List<Car> getCar() {
         return car;
     }
 
-    public void setCar(Car car) {
+    public void setCar(List<Car> car) {
         this.car = car;
     }
 }

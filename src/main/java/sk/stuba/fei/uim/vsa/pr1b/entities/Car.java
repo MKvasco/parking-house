@@ -19,7 +19,7 @@ public class Car {
     private String colour;
     private String vehicleRegistrationPlate;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
 
