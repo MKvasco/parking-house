@@ -68,6 +68,7 @@ public class CarParkService extends AbstractCarParkService{
         return null;
     }
 
+    //TODO: add try catch block and use query instead of getCarPark
     @Override
     public Object deleteCarPark(Long carParkId) {
         Object deletedCarPark = getCarPark(carParkId);
@@ -170,6 +171,7 @@ public class CarParkService extends AbstractCarParkService{
         }
     }
 
+    //TODO: Wrong
     @Override
     public Object deleteCarParkFloor(Long carParkFloorId) {
         try{
@@ -352,51 +354,102 @@ public class CarParkService extends AbstractCarParkService{
         }
         return null;
     }
-    //TODO
     @Override
     public List<Object> getCars(Long userId) {
-        return null;
+        try{
+            User user = em.createNamedQuery(User.Queries.findById, User.class)
+                .setParameter("id", userId)
+                .getSingleResult();
+            return Collections.singletonList(user.getCars());
+
+        }catch(NoResultException e){
+            return null;
+        }
     }
-    //TODO
+    //TODO: UPDATE CAR
     @Override
     public Object updateCar(Object car) {
         return null;
     }
-    //TODO
     @Override
     public Object deleteCar(Long carId) {
-        return null;
+        try{
+            Car deletedCar = em.createNamedQuery(Car.Queries.findById, Car.class)
+                            .setParameter("id", carId)
+                            .getSingleResult();
+            et.begin();
+            em.createNamedQuery(Car.Queries.deleteById, Car.class)
+                    .setParameter("id", carId)
+                    .executeUpdate();
+            et.commit();
+            return deletedCar;
+        }catch(NoResultException e){
+            return null;
+        }
     }
 
-    //TODO USER
+    //USER
     @Override
     public Object createUser(String firstname, String lastname, String email) {
-        return null;
+        try{
+            et.begin();
+            User user = new User(firstname, lastname, email);
+            em.persist(user);
+            et.commit();
+            return user;
+        }catch(NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public Object getUser(Long userId) {
-        return null;
+        try{
+            return em.createNamedQuery(User.Queries.findById, User.class)
+                    .setParameter("id", userId)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public Object getUser(String email) {
-        return null;
+        try{
+            return em.createNamedQuery(User.Queries.findByEmail, User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public List<Object> getUsers() {
-        return null;
+        try{
+            return Collections.singletonList(em.createNamedQuery(User.Queries.findAll, User.class)
+                    .getResultList());
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
+    //TODO: UPDATE USER
     @Override
     public Object updateUser(Object user) {
         return null;
     }
-    //TODO
     @Override
     public Object deleteUser(Long userId) {
-        return null;
+        try{
+            User deletedUser = em.createNamedQuery(User.Queries.findById, User.class)
+                    .setParameter("id", userId)
+                    .getSingleResult();
+            et.begin();
+            em.createNamedQuery(User.Queries.deleteById, User.class)
+                    .setParameter("id", userId)
+                    .executeUpdate();
+            et.commit();
+            return deletedUser;
+        }catch (NoResultException e){
+            return null;
+        }
     }
 
     //TODO RESERVATION
