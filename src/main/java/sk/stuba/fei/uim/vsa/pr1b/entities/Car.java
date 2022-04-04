@@ -3,8 +3,10 @@ package sk.stuba.fei.uim.vsa.pr1b.entities;
 import jdk.jfr.Name;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@Table(name = "CAR")
 @NamedQuery(name = Car.Queries.findAll, query = "select car from Car car")
 @NamedQuery(name = Car.Queries.findById, query = "select car from Car car where car.id = :id")
 @NamedQuery(name = Car.Queries.deleteById, query = "delete from Car car where car.id = :id")
@@ -18,13 +20,19 @@ public class Car {
     @Id
     @GeneratedValue
     private Long id;
+
     private String brand;
     private String model;
     private String colour;
+
+    @Column(name = "VEHICLE_REGISTRATION_PLATE", unique = true)
     private String vehicleRegistrationPlate;
 
     @ManyToOne
     private User user;
+
+    @ManyToOne
+    private CarType carType;
 
 
     public Car(String brand, String model, String colour, String vehicleRegistrationPlate) {
@@ -81,5 +89,13 @@ public class Car {
 
     public User getUser() {
         return user;
+    }
+
+    public CarType getCarType() {
+        return carType;
+    }
+
+    public void setCarType(CarType carType) {
+        this.carType = carType;
     }
 }

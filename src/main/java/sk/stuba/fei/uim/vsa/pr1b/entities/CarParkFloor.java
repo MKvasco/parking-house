@@ -15,6 +15,7 @@ public class CarParkFloor {
     @Id
     @GeneratedValue
     private Long id;
+
     private String floorIdentifier;
 
     @OneToMany(mappedBy = "carParkFloor")

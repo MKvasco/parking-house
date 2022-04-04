@@ -5,7 +5,6 @@ import sk.stuba.fei.uim.vsa.pr1b.entities.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -202,6 +201,13 @@ public class CarParkService extends AbstractCarParkService{
             return null;
         }
     }
+
+    //TODO
+    @Override
+    public Object createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
+        return null;
+    }
+
     @Override
     public Object getParkingSpot(Long parkingSpotId) {
         try{
@@ -297,6 +303,7 @@ public class CarParkService extends AbstractCarParkService{
     //TODO: UPDATE PARKING SPOT
     @Override
     public Object updateParkingSpot(Object parkingSpot) {
+//        ((ParkingSpot) parkingSpot).
         try {
             return null;
         } catch (NoResultException e) {
@@ -328,6 +335,14 @@ public class CarParkService extends AbstractCarParkService{
             return null;
         }
     }
+
+    //TODO
+    @Override
+    public Object createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate, Long carTypeId) {
+        return null;
+    }
+
+
     @Override
     public Object getCar(Long carId) {
         try{
@@ -452,9 +467,23 @@ public class CarParkService extends AbstractCarParkService{
         }
     }
 
-    //TODO RESERVATION
+    //TODO RESERVATION -> Check if cartype in parkingspot allowed types
     @Override
     public Object createReservation(Long parkingSpotId, Long cardId) {
+        try{
+            Car car = em.createNamedQuery(Car.Queries.findById, Car.class)
+                    .setParameter("id", cardId)
+                    .getSingleResult();
+            ParkingSpot parkingSpot = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
+                    .setParameter("id", parkingSpotId)
+                    .getSingleResult();
+            if(!parkingSpot.isAvailable()) return null;
+            //cartype in parkingspot allowed types?
+            if(parkingSpot.getCarType() != car.getCarType()) return null;
+//            Reservation reservation = new Reservation(parkingSpotId, cardId, new Date());
+        }catch (NoResultException e){
+            return null;
+        }
         return null;
     }
     //TODO
@@ -478,39 +507,52 @@ public class CarParkService extends AbstractCarParkService{
         return null;
     }
 
-    //TODO CARTYPES
+    //CARTYPES
     @Override
     public Object createCarType(String name) {
-        return null;
+        return new CarType(name);
     }
-    //TODO
     @Override
     public List<Object> getCarTypes() {
-        return null;
+        try{
+            return Collections.singletonList(em.createNamedQuery(CarType.Queries.findAll, CarType.class)
+                    .getResultList());
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public Object getCarType(Long carTypeId) {
-        return null;
+        try{
+           return em.createNamedQuery(CarType.Queries.findById, CarType.class)
+                   .setParameter("id", carTypeId)
+                   .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public Object getCarType(String name) {
-        return null;
+        try{
+            return em.createNamedQuery(CarType.Queries.findByName, CarType.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public Object deleteCarType(Long carTypeId) {
-        return null;
-    }
-    //TODO
-    @Override
-    public Object createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate, Long carTypeId) {
-        return null;
-    }
-    //TODO
-    @Override
-    public Object createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
-        return null;
+        try{
+            et.begin();
+            em.createNamedQuery(CarType.Queries.deleteById, CarType.class)
+                    .executeUpdate();
+            et.commit();
+            return em.createNamedQuery(CarType.Queries.findById, CarType.class)
+                    .setParameter("id", carTypeId)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            return null;
+        }
     }
 }

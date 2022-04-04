@@ -4,11 +4,12 @@ package sk.stuba.fei.uim.vsa.pr1b.entities;
 import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "USER")
 @NamedQuery(name = User.Queries.findAll, query="select user from User user")
 @NamedQuery(name = User.Queries.findById, query = "select user from User user where user.id = :id")
 @NamedQuery(name = User.Queries.findByEmail, query = "select user from User user where user.email = :email")
 @NamedQuery(name = User.Queries.deleteById, query = "delete from User user where user.id = :id")
-@Entity
 public class User {
     public static final class Queries{
         public static final String findAll = "findAll";
@@ -19,8 +20,14 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(name = "FIRST_NAME")
     private String name;
+
+    @Column(name = "LAST_NAME")
     private String surname;
+
+    @Column(name = "EMAIL", unique = true)
     private String email;
 
     @OneToMany
