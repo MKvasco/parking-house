@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.RollbackException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CarParkService extends AbstractCarParkService{
@@ -172,6 +173,7 @@ public class CarParkService extends AbstractCarParkService{
             for(CarParkFloor floor : carPark.getCarParkFloors()){
                 System.out.println(floor.getFloorIdentifier());
                 if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
+                    carPark.removeCarParkFloor(floor);
                     et.begin();
                     em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)
                             .setParameter("id", floor.getId())
@@ -192,7 +194,9 @@ public class CarParkService extends AbstractCarParkService{
             CarParkFloor carParkFloor = em.createNamedQuery(CarParkFloor.Queries.findById, CarParkFloor.class)
                     .setParameter("id", carParkFloorId)
                     .getSingleResult();
+            CarPark carPark = carParkFloor.getCarPark();
             et.begin();
+            carPark.removeCarParkFloor(carParkFloor);
             em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)
                     .setParameter("id", carParkFloorId)
                     .executeUpdate();
@@ -220,9 +224,15 @@ public class CarParkService extends AbstractCarParkService{
                     .getSingleResult();
             List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
             for(CarParkFloor floor : carParkFloors){
+                List<ParkingSpot> parkingSpots = floor.getParkingSpots();
+                for(ParkingSpot ps : parkingSpots){
+                    if(Objects.equals(ps.getIdentifier(), spotIdentifier))
+                        return null;
+                }
                 if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
                     et.begin();
-                    parkingSpot = new ParkingSpot(floor, carType);
+                    parkingSpot = new ParkingSpot(floor, carType, spotIdentifier);
+                    floor.addParkingSpot(parkingSpot);
                     em.persist(parkingSpot);
                     et.commit();
                 }
@@ -246,7 +256,7 @@ public class CarParkService extends AbstractCarParkService{
     @Override
     public List<Object> getParkingSpots(Long carParkId, String floorIdentifier) {
         try{
-            List<ParkingSpot> parkingSpots = null;
+            List<ParkingSpot> parkingSpots = new ArrayList<>();
             List<CarParkFloor> carParkFloors = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id", carParkId)
                     .getSingleResult()
@@ -256,9 +266,9 @@ public class CarParkService extends AbstractCarParkService{
                     parkingSpots = floor.getParkingSpots();
                 }
             }
-            return Collections.singletonList(parkingSpots);
+            return new ArrayList<>(parkingSpots);
         }catch(NoResultException e){
-            return null;
+            return new ArrayList<>();
         }
     }
     @Override
@@ -275,7 +285,7 @@ public class CarParkService extends AbstractCarParkService{
             return parkingSpots;
 
         }catch(NoResultException e){
-            return null;
+            return new HashMap<>();
         }
     }
     @Override
@@ -293,12 +303,12 @@ public class CarParkService extends AbstractCarParkService{
                     if(parkingSpot.isAvailable())
                         availableParkingSpots.add(parkingSpot);
                 }
-                parkingSpots.put(floor.getFloorIdentifier(), Collections.singletonList(availableParkingSpots));
+                parkingSpots.put(floor.getFloorIdentifier(), new ArrayList<>(availableParkingSpots));
             }
             return parkingSpots;
 
         }catch(NoResultException e){
-            return null;
+            return new HashMap<>();
         }
     }
     @Override
@@ -317,11 +327,11 @@ public class CarParkService extends AbstractCarParkService{
                         occupiedParkingSpots.add(parkingSpot);
                     }
                 }
-                occupiedParkingSpotsMap.put(floor.getFloorIdentifier(), Collections.singletonList(occupiedParkingSpots));
+                occupiedParkingSpotsMap.put(floor.getFloorIdentifier(), new ArrayList<>(occupiedParkingSpots));
             }
             return occupiedParkingSpotsMap;
         }catch(NoResultException e){
-            return null;
+            return new HashMap<>();
         }
     }
 
@@ -341,9 +351,19 @@ public class CarParkService extends AbstractCarParkService{
     @Override
     public Object deleteParkingSpot(Long parkingSpotId) {
         try{
-            return em.createNamedQuery(ParkingSpot.Queries.deleteById, ParkingSpot.class)
+            Object ps = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
                     .setParameter("id", parkingSpotId)
                     .getSingleResult();
+            CarParkFloor carParkFloor = ((ParkingSpot) ps).getCarParkFloor();
+            CarType carType = ((ParkingSpot) ps).getCarType();
+            carParkFloor.removeParkingSpot((ParkingSpot) ps);
+            carType.removeParkingSpot((ParkingSpot) ps);
+            et.begin();
+            em.createNamedQuery(ParkingSpot.Queries.deleteById, ParkingSpot.class)
+                    .setParameter("id", parkingSpotId)
+                    .executeUpdate();
+            et.commit();
+            return ps;
         }catch(RollbackException | NoResultException e){
             return null;
         }
@@ -366,6 +386,8 @@ public class CarParkService extends AbstractCarParkService{
             et.begin();
             Car car = new Car(brand, model, colour, vehicleRegistrationPlate, carType);
             car.setUser(user);
+            user.addCar(car);
+            carType.addCars(car);
             em.persist(car);
             et.commit();
             return car;
@@ -406,10 +428,10 @@ public class CarParkService extends AbstractCarParkService{
             User user = em.createNamedQuery(User.Queries.findById, User.class)
                 .setParameter("id", userId)
                 .getSingleResult();
-            return Collections.singletonList(user.getCars());
+            return new ArrayList<>(user.getCars());
 
         }catch(NoResultException e){
-            return null;
+            return new ArrayList<>();
         }
     }
     @Override
@@ -431,6 +453,10 @@ public class CarParkService extends AbstractCarParkService{
             Car deletedCar = em.createNamedQuery(Car.Queries.findById, Car.class)
                             .setParameter("id", carId)
                             .getSingleResult();
+            CarType carType = deletedCar.getCarType();
+            User user = deletedCar.getUser();
+            user.removeCar(deletedCar);
+            carType.removeCar(deletedCar);
             et.begin();
             em.createNamedQuery(Car.Queries.deleteById, Car.class)
                     .setParameter("id", carId)
@@ -528,7 +554,10 @@ public class CarParkService extends AbstractCarParkService{
             if(!parkingSpot.isAvailable()) return null;
             if(parkingSpot.getCarType() != car.getCarType()) return null;
             et.begin();
-            Reservation reservation = new Reservation(parkingSpot, cardId, new Date());
+            Reservation reservation = new Reservation(parkingSpot, car, new Date());
+            parkingSpot.setAvailable(false);
+            parkingSpot.addReservation(reservation);
+            car.addReservation(reservation);
             em.persist(reservation);
             et.commit();
             return  reservation;
@@ -542,12 +571,28 @@ public class CarParkService extends AbstractCarParkService{
             Reservation reservation = em.createNamedQuery(Reservation.Queries.findById, Reservation.class)
                     .setParameter("id", reservationId)
                     .getSingleResult();
+            Car car = reservation.getCar();
             ParkingSpot parkingSpot = reservation.getParkingSpot();
             int price = parkingSpot.getCarParkFloor().getCarPark().getPricePerHour();
             long totalTime = new Date().getTime() - reservation.getStartTime().getTime();
-            long totalHours = totalTime/1000/60/60;
-            Float totalPrice = (float) Math.round(totalHours * price);
+            long totalSeconds = totalTime/1000;
+            long totalHours;
+            if(totalSeconds % 60 == 0){
+                long totalMinutes = totalSeconds / 60;
+                if(totalMinutes % 60 == 0)
+                    totalHours = totalMinutes / 60;
+                else
+                    totalHours = totalMinutes / 60 + 1;
+            }else{
+                totalHours = (totalSeconds/60/60) + 1;
+            }
+            totalHours = (totalHours == 0 ? 1 : totalHours);
+            int totalPrice = (int) (totalHours * price);
+            reservation.setEndTime(new Date());
+            reservation.setPrice(totalPrice);
             et.begin();
+            car.removeReservation(reservation);
+            parkingSpot.setAvailable(true);
             em.merge(reservation);
             et.commit();
             return reservation;
@@ -558,22 +603,21 @@ public class CarParkService extends AbstractCarParkService{
 
     @Override
     public List<Object> getReservations(Long parkingSpotId, Date date) {
-        try{
+        try {
             ParkingSpot parkingSpot = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
                     .setParameter("id", parkingSpotId)
                     .getSingleResult();
             List<Reservation> allReservations = parkingSpot.getReservations();
             List<Object> reservations = new ArrayList<>();
-            for(Reservation reservation : allReservations){
-                Date reservationDate = reservation.getStartTime();
-                if(reservationDate.after(date)){
+            SimpleDateFormat smf = new SimpleDateFormat("dd-MM-yyy");
+            for (Reservation reservation : allReservations) {
+                if (smf.format(date).equals(smf.format(reservation.getStartTime()))) {
                     reservations.add(reservation);
                 }
             }
             return reservations;
-
-        }catch (NoResultException e) {
-            return null;
+        } catch (NoResultException e) {
+            return new ArrayList<>();
         }
     }
     @Override
@@ -585,11 +629,15 @@ public class CarParkService extends AbstractCarParkService{
                     .getSingleResult().getCars();
             for(Car car : userCars){
                 List<Reservation> userCarReservations = car.getReservations();
-                userReservations.addAll(userCarReservations);
+                for(Reservation reservation : userCarReservations){
+                    if(reservation.getEndTime() == null){
+                        userReservations.add(reservation);
+                    }
+                }
             }
             return userReservations;
         }catch (NoResultException e){
-            return null;
+            return new ArrayList<>();
         }
     }
     @Override
@@ -608,15 +656,23 @@ public class CarParkService extends AbstractCarParkService{
     //CARTYPES
     @Override
     public Object createCarType(String name) {
-        return new CarType(name);
+        try{
+            et.begin();
+            CarType carType = new CarType(name);
+            em.persist(carType);
+            et.commit();
+            return carType;
+        }catch (RollbackException e){
+            return null;
+        }
     }
     @Override
     public List<Object> getCarTypes() {
         try{
-            return Collections.singletonList(em.createNamedQuery(CarType.Queries.findAll, CarType.class)
+            return new ArrayList<>(em.createNamedQuery(CarType.Queries.findAll, CarType.class)
                     .getResultList());
         }catch (NoResultException e){
-            return null;
+            return new ArrayList<>();
         }
     }
     @Override
@@ -642,13 +698,15 @@ public class CarParkService extends AbstractCarParkService{
     @Override
     public Object deleteCarType(Long carTypeId) {
         try{
-            et.begin();
-            em.createNamedQuery(CarType.Queries.deleteById, CarType.class)
-                    .executeUpdate();
-            et.commit();
-            return em.createNamedQuery(CarType.Queries.findById, CarType.class)
+            Object carType = em.createNamedQuery(CarType.Queries.findById, CarType.class)
                     .setParameter("id", carTypeId)
                     .getSingleResult();
+            et.begin();
+            em.createNamedQuery(CarType.Queries.deleteById, CarType.class)
+                    .setParameter("id", carTypeId)
+                    .executeUpdate();
+            et.commit();
+            return carType;
         }catch (NoResultException e){
             return null;
         }

@@ -24,6 +24,7 @@ public class ParkingSpot implements Serializable {
     private Long id;
 
     private String identifier;
+    @Transient
     private boolean available;
 
     @ManyToOne
@@ -32,14 +33,15 @@ public class ParkingSpot implements Serializable {
     @ManyToOne
     private CarType carType;
 
-    @OneToMany
+    @OneToMany(mappedBy = "parkingSpot")
     private List<Reservation> reservations;
 
-    public ParkingSpot(CarParkFloor carParkFloor, CarType carType){
+    public ParkingSpot(CarParkFloor carParkFloor, CarType carType, String identifier){
         this.carParkFloor = carParkFloor;
         this.available = true;
         this.carType = carType;
         this.reservations = null;
+        this.identifier = identifier;
     }
     public ParkingSpot(){}
 
@@ -88,5 +90,16 @@ public class ParkingSpot implements Serializable {
     }
     public void addReservation(Reservation reservation){
         this.reservations.add(reservation);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ParkingSpot{" +
+                "id=" + id +
+                ", identifier='" + identifier + '\'' +
+                ", carParkFloor=" + carParkFloor +
+                ", carType=" + carType +
+                '}';
     }
 }

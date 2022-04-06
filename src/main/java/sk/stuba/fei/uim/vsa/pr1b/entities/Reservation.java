@@ -25,7 +25,8 @@ public class Reservation implements Serializable {
     @ManyToOne
     private Car car;
 
-    private Float price;
+    @Column(name = "TOTAL_COST")
+    private Integer price;
 
     @Column(name = "RESERVATION_START")
     @Temporal(TemporalType.TIMESTAMP)
@@ -35,7 +36,7 @@ public class Reservation implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    public Reservation(ParkingSpot parkingSpot, Long carId, Date startTime) {
+    public Reservation(ParkingSpot parkingSpot, Car car, Date startTime) {
         this.parkingSpot = parkingSpot;
         this.car = car;
         this.price = null;
@@ -55,7 +56,7 @@ public class Reservation implements Serializable {
         return car;
     }
 
-    public Float getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -71,7 +72,7 @@ public class Reservation implements Serializable {
         this.car = car;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -89,5 +90,17 @@ public class Reservation implements Serializable {
 
     public void setParkingSpot(ParkingSpot parkingSpot) {
         this.parkingSpot = parkingSpot;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", parkingSpot=" + parkingSpot +
+                ", car=" + car +
+                ", price=" + price +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 }

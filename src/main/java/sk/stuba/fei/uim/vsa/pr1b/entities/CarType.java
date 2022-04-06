@@ -67,4 +67,24 @@ public class CarType implements Serializable {
     public void setParkingSpots(List<ParkingSpot> parkingSpots) {
         this.parkingSpots = parkingSpots;
     }
+    public void addParkingSpot(ParkingSpot parkingSpot){
+        this.parkingSpots.add(parkingSpot);
+    }
+    public void addCars(Car car){
+        this.cars.add(car);
+    }
+    public void removeCar(Car car){
+        this.cars.remove(car);
+    }
+    public void  removeParkingSpot(ParkingSpot parkingSpot){
+        this.parkingSpots.remove(parkingSpot);
+    }
+
+    @Override
+    public String toString() {
+        return "CarType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

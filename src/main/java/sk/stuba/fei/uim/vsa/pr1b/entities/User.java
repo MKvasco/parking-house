@@ -31,7 +31,7 @@ public class User implements Serializable {
     @Column(name = "EMAIL", unique = true)
     private String email;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Car> cars;
 
     public User(String name, String surname, String email) {
@@ -77,5 +77,21 @@ public class User implements Serializable {
 
     public void setCars(List<Car> cars) {
         this.cars = cars;
+    }
+    public void addCar(Car car){
+        this.cars.add(car);
+    }
+    public void removeCar(Car car){
+        this.cars.remove(car);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

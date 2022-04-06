@@ -26,7 +26,7 @@ public class CarPark implements Serializable {
     private String address;
     private Integer pricePerHour;
 
-    @OneToMany(mappedBy = "carPark")
+    @OneToMany(mappedBy = "carPark", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<CarParkFloor> carParkFloors;
 
 
@@ -86,5 +86,8 @@ public class CarPark implements Serializable {
     }
     public void addCarParkFloor(CarParkFloor carParkFloor){
         this.carParkFloors.add(carParkFloor);
+    }
+    public void removeCarParkFloor(CarParkFloor carParkFloor){
+        this.carParkFloors.remove(carParkFloor);
     }
 }

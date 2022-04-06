@@ -19,7 +19,7 @@ public class CarParkFloor implements Serializable {
 
     private String floorIdentifier;
 
-    @OneToMany(mappedBy = "carParkFloor")
+    @OneToMany(mappedBy = "carParkFloor", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<ParkingSpot> parkingSpots;
 
     @ManyToOne
@@ -57,13 +57,18 @@ public class CarParkFloor implements Serializable {
 
         this.carPark = carPark;
     }
+    public void addParkingSpot(ParkingSpot parkingSpot){
+        this.parkingSpots.add(parkingSpot);
+    }
+    public void removeParkingSpot(ParkingSpot parkingSpot){
+        this.parkingSpots.remove(parkingSpot);
+    }
 
     @Override
     public String toString() {
         return "CarParkFloor{" +
                 "id=" + id +
                 ", floorIdentifier='" + floorIdentifier + '\'' +
-                ", parkingSpots=" + parkingSpots +
                 ", carPark=" + carPark +
                 '}';
     }

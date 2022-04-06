@@ -109,6 +109,28 @@ public class Car implements Serializable {
     }
 
     public void setReservations(List<Reservation> reservations) {
+
         this.reservations = reservations;
+    }
+
+    public void addReservation(Reservation reservation){
+        this.reservations.add(reservation);
+    }
+    public void removeReservation(Reservation reservation){
+        this.reservations.remove(reservation);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", colour='" + colour + '\'' +
+                ", vehicleRegistrationPlate='" + vehicleRegistrationPlate + '\'' +
+                ", user=" + user +
+                ", carType=" + carType +
+                '}';
     }
 }
