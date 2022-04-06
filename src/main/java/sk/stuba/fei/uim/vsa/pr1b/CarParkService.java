@@ -66,7 +66,7 @@ public class CarParkService extends AbstractCarParkService{
                     .getResultList();
             return new ArrayList<>(carParkList);
         }catch (NoResultException e){
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -108,8 +108,15 @@ public class CarParkService extends AbstractCarParkService{
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id",carParkId)
                     .getSingleResult();
+            List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
+            for(CarParkFloor carParkFloor : carParkFloors){
+                if(Objects.equals(carParkFloor.getFloorIdentifier(), floorIdentifier)){
+                    return null;
+                }
+            }
             et.begin();
             CarParkFloor carParkFloor = new CarParkFloor(carPark, floorIdentifier);
+            carPark.addCarParkFloor(carParkFloor);
             em.persist(carParkFloor);
             et.commit();
             return carParkFloor;
@@ -117,25 +124,6 @@ public class CarParkService extends AbstractCarParkService{
             return null;
         }
     }
-
-//    @Override
-//    public Object getCarParkFloor(Long carParkId, String floorIdentifier) {
-//        try{
-//            CarParkFloor carParkFloor = null;
-//            CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
-//                    .setParameter("id",carParkId)
-//                    .getSingleResult();
-//            List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
-//            for(CarParkFloor floor : carParkFloors) {
-//                if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
-//                    carParkFloor = floor;
-//                }
-//            }
-//            return  carParkFloor;
-//        }catch(NoResultException e) {
-//            return null;
-//        }
-//    }
 
     @Override
     public Object getCarParkFloor(Long carParkFloorId) {
@@ -156,7 +144,7 @@ public class CarParkService extends AbstractCarParkService{
                     .getSingleResult();
             return new ArrayList<>(carPark.getCarParkFloors());
         }catch(NoResultException e){
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -182,6 +170,7 @@ public class CarParkService extends AbstractCarParkService{
                     .setParameter("id",carParkId)
                     .getSingleResult();
             for(CarParkFloor floor : carPark.getCarParkFloors()){
+                System.out.println(floor.getFloorIdentifier());
                 if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
                     et.begin();
                     em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)

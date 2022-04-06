@@ -81,6 +81,10 @@ public class CarPark implements Serializable {
     }
 
     public void setCarParkFloors(List<CarParkFloor> carParkFloors) {
+
         this.carParkFloors = carParkFloors;
+    }
+    public void addCarParkFloor(CarParkFloor carParkFloor){
+        this.carParkFloors.add(carParkFloor);
     }
 }

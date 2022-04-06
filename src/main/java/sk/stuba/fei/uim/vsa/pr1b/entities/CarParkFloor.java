@@ -26,6 +26,7 @@ public class CarParkFloor implements Serializable {
     private CarPark carPark;
 
     public CarParkFloor(CarPark carPark, String floorIdentifier) {
+
         this.floorIdentifier = floorIdentifier;
         this.carPark = carPark;
 
@@ -53,6 +54,17 @@ public class CarParkFloor implements Serializable {
     }
 
     public void setCarPark(CarPark carPark) {
+
         this.carPark = carPark;
+    }
+
+    @Override
+    public String toString() {
+        return "CarParkFloor{" +
+                "id=" + id +
+                ", floorIdentifier='" + floorIdentifier + '\'' +
+                ", parkingSpots=" + parkingSpots +
+                ", carPark=" + carPark +
+                '}';
     }
 }
