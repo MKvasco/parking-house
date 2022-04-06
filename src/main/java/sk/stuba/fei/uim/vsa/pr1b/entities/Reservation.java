@@ -10,8 +10,8 @@ import java.util.Date;
 @NamedQuery(name = Reservation.Queries.findById, query = "select reservation from Reservation reservation where reservation.id = :id ")
 public class Reservation implements Serializable {
     public static final class Queries{
-        public static final String findAll = "findAll";
-        public static final String findById = "findById";
+        public static final String findAll = "Reservation.findAll";
+        public static final String findById = "Reservation.findById";
     }
 
     @Id
@@ -21,7 +21,7 @@ public class Reservation implements Serializable {
     @ManyToOne
     private ParkingSpot parkingSpot;
 
-    @Column(name = "CAR")
+    @JoinColumn(name = "CAR")
     @ManyToOne
     private Car car;
 

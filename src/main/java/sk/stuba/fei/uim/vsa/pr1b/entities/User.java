@@ -13,10 +13,10 @@ import java.util.List;
 @NamedQuery(name = User.Queries.deleteById, query = "delete from User user where user.id = :id")
 public class User implements Serializable {
     public static final class Queries{
-        public static final String findAll = "findAll";
-        public static final String findById = "findById";
-        public static final String findByEmail = "findByEmail";
-        public static final String deleteById = "deleteById";
+        public static final String findAll = "User.findAll";
+        public static final String findById = "User.findById";
+        public static final String findByEmail = "User.findByEmail";
+        public static final String deleteById = "User.deleteById";
     }
     @Id
     @GeneratedValue

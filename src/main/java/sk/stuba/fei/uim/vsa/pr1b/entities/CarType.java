@@ -14,10 +14,10 @@ import java.util.List;
 public class CarType implements Serializable {
 
     public static final class Queries{
-        public static final String findAll = "findAll";
-        public static final String findById = "findById";
-        public static final String findByName = "findByName";
-        public static final String deleteById = "deleteById";
+        public static final String findAll = "CarType.findAll";
+        public static final String findById = "CarType.findById";
+        public static final String findByName = "CarType.findByName";
+        public static final String deleteById = "CarType.deleteById";
 
     }
     @Id

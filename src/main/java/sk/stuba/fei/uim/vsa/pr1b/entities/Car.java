@@ -13,9 +13,9 @@ import java.util.List;
 @NamedQuery(name = Car.Queries.deleteById, query = "delete from Car car where car.id = :id")
 public class Car implements Serializable {
     public static final class Queries{
-        public static final String findAll = "findAll";
-        public static final String findById = "findById";
-        public static final String deleteById = "deleteById";
+        public static final String findAll = "Car.findAll";
+        public static final String findById = "Car.findById";
+        public static final String deleteById = "Car.deleteById";
     }
 
     @Id

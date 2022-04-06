@@ -10,15 +10,12 @@ import java.util.List;
 @NamedQuery(name = CarPark.Queries.findById,   query = "select carPark from CarPark carPark where carPark.id = :id")
 @NamedQuery(name = CarPark.Queries.findByName, query = "select carPark from CarPark carPark where carPark.name = :name")
 @NamedQuery(name = CarPark.Queries.deleteById, query = "delete from CarPark carPark where carPark.id = :id")
-@NamedQuery(name = CarPark.Queries.update,     query = "update CarPark carPark set " +
-        "carPark.address = :address, carPark.name = :name, carPark.pricePerHour = :pricePerHour where carPark.id = :id ")
 public class CarPark implements Serializable {
     public static final class Queries {
         public static final String findAll = "CarPark.findAll";
         public static final String findById = "CarPark.findById";
         public static final String findByName = "CarPark.findByName";
         public static final  String deleteById = "CarPark.deleteById";
-        public static final  String update = "CarPark.update";
     }
     @Id
     @GeneratedValue
