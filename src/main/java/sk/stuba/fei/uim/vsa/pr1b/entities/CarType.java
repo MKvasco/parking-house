@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.vsa.pr1b.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -10,7 +11,7 @@ import java.util.List;
 @NamedQuery(name=CarType.Queries.findById, query = "select carType from CarType carType where carType.id = :id")
 @NamedQuery(name=CarType.Queries.findByName, query = "select  carType from CarType carType where carType.name = :name")
 @NamedQuery(name=CarType.Queries.deleteById, query = "delete from CarType carType where carType.id = :id")
-public class CarType {
+public class CarType implements Serializable {
 
     public static final class Queries{
         public static final String findAll = "findAll";
@@ -23,6 +24,7 @@ public class CarType {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "carType")

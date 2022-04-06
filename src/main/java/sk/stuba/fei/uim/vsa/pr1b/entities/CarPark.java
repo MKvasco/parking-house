@@ -24,6 +24,7 @@ public class CarPark implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String name;
     private String address;
     private Integer pricePerHour;

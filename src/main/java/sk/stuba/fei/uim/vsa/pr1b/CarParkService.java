@@ -5,8 +5,8 @@ import sk.stuba.fei.uim.vsa.pr1b.entities.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.persistence.RollbackException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CarParkService extends AbstractCarParkService{
     private final EntityManager em;
@@ -26,11 +26,15 @@ public class CarParkService extends AbstractCarParkService{
     // CAR PARK
     @Override
     public Object createCarPark(String name, String address, Integer pricePerHour) {
-        et.begin();
-        CarPark carPark = new CarPark(name, address, pricePerHour);
-        em.persist(carPark);
-        et.commit();
-        return carPark;
+        try{
+            et.begin();
+            CarPark carPark = new CarPark(name, address, pricePerHour);
+            em.persist(carPark);
+            et.commit();
+            return carPark;
+        }catch (RollbackException e){
+            return null;
+        }
     }
 
     @Override
@@ -57,29 +61,44 @@ public class CarParkService extends AbstractCarParkService{
 
     @Override
     public List<Object> getCarParks() {
-        return this.em.createNamedQuery(CarPark.Queries.findAll, CarPark.class)
-                .getResultStream().collect(Collectors.toList());
+        try{
+            List<CarPark> carParkList = em.createNamedQuery(CarPark.Queries.findAll, CarPark.class)
+                    .getResultList();
+            return new ArrayList<>(carParkList);
+        }catch (NoResultException e){
+            return null;
+        }
     }
 
-    //TODO UPDATE CAR PARK
     @Override
     public Object updateCarPark(Object carPark) {
-        return null;
+        try{
+            et.begin();
+            em.merge(carPark);
+            et.commit();
+            return em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
+                    .setParameter("id", ((CarPark) carPark).getId())
+                    .getSingleResult();
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
     }
 
-    //TODO: add try catch block and use query instead of getCarPark
     @Override
     public Object deleteCarPark(Long carParkId) {
-        Object deletedCarPark = getCarPark(carParkId);
-        if(deletedCarPark == null) return null;
-            else{
-                et.begin();
-                em.createNamedQuery(CarPark.Queries.deleteById, CarPark.class)
-                        .setParameter("id", carParkId)
-                        .executeUpdate();
-                et.commit();
-                return deletedCarPark;
-            }
+        try{
+            CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
+                    .setParameter("id", carParkId)
+                    .getSingleResult();
+            et.begin();
+            em.createNamedQuery(CarPark.Queries.deleteById, CarPark.class)
+                    .setParameter("id", carParkId)
+                    .executeUpdate();
+            et.commit();
+            return carPark;
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
     }
 
     // CAR PARK FLOOR
@@ -94,7 +113,7 @@ public class CarParkService extends AbstractCarParkService{
             em.persist(carParkFloor);
             et.commit();
             return carParkFloor;
-        }catch(NoResultException e){
+        }catch(NoResultException | RollbackException e){
             return null;
         }
     }
@@ -135,16 +154,24 @@ public class CarParkService extends AbstractCarParkService{
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id",carParkId)
                     .getSingleResult();
-            return Collections.singletonList(carPark.getCarParkFloors());
+            return new ArrayList<>(carPark.getCarParkFloors());
         }catch(NoResultException e){
             return null;
         }
     }
 
-    //TODO: UPDATE CAR PARK FLOOR
     @Override
     public Object updateCarParkFloor(Object carParkFloor) {
-        return null;
+        try{
+            et.begin();
+            em.merge(carParkFloor);
+            et.commit();
+            return em.createNamedQuery(CarParkFloor.Queries.findById, CarParkFloor.class)
+                    .setParameter("id", ((CarParkFloor) carParkFloor).getId())
+                    .getSingleResult();
+        }catch (RollbackException | NoResultException e){
+            return null;
+        }
     }
 
     @Override
@@ -165,47 +192,56 @@ public class CarParkService extends AbstractCarParkService{
                 }
             }
             return carParkFloor;
-        }catch(NoResultException e){
+        }catch(RollbackException | NoResultException e){
             return null;
         }
     }
 
-    //TODO: Wrong
     @Override
     public Object deleteCarParkFloor(Long carParkFloorId) {
         try{
-            return em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)
+            CarParkFloor carParkFloor = em.createNamedQuery(CarParkFloor.Queries.findById, CarParkFloor.class)
                     .setParameter("id", carParkFloorId)
                     .getSingleResult();
-        }catch(NoResultException e){
+            et.begin();
+            em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)
+                    .setParameter("id", carParkFloorId)
+                    .executeUpdate();
+            et.commit();
+            return carParkFloor;
+        }catch(RollbackException | NoResultException e){
             return null;
         }
     }
 
-    //PARKING SPOT
     @Override
     public Object createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier) {
+        return null;
+    }
+
+    @Override
+    public Object createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
         try{
             ParkingSpot parkingSpot = null;
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id", carParkId)
                     .getSingleResult();
+            CarType carType = em.createNamedQuery(CarType.Queries.findById, CarType.class)
+                    .setParameter("id", carTypeId)
+                    .getSingleResult();
             List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
             for(CarParkFloor floor : carParkFloors){
                 if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
-                    parkingSpot = new ParkingSpot(floor);
+                    et.begin();
+                    parkingSpot = new ParkingSpot(floor, carType);
+                    em.persist(parkingSpot);
+                    et.commit();
                 }
             }
             return parkingSpot;
-        }catch (NoResultException e){
+        }catch (RollbackException | NoResultException e){
             return null;
         }
-    }
-
-    //TODO
-    @Override
-    public Object createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
-        return null;
     }
 
     @Override
@@ -300,13 +336,16 @@ public class CarParkService extends AbstractCarParkService{
         }
     }
 
-    //TODO: UPDATE PARKING SPOT
     @Override
     public Object updateParkingSpot(Object parkingSpot) {
-//        ((ParkingSpot) parkingSpot).
         try {
-            return null;
-        } catch (NoResultException e) {
+            et.begin();
+            em.merge(((ParkingSpot) parkingSpot));
+            et.commit();
+            return em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
+                    .setParameter("id", ((ParkingSpot) parkingSpot).getId())
+                    .getSingleResult();
+        } catch (RollbackException | NoResultException e) {
             return null;
         }
     }
@@ -316,32 +355,35 @@ public class CarParkService extends AbstractCarParkService{
             return em.createNamedQuery(ParkingSpot.Queries.deleteById, ParkingSpot.class)
                     .setParameter("id", parkingSpotId)
                     .getSingleResult();
-        }catch(NoResultException e){
+        }catch(RollbackException | NoResultException e){
             return null;
         }
     }
 
-    //CAR
     @Override
     public Object createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate) {
+        return null;
+    }
+
+    @Override
+    public Object createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate, Long carTypeId) {
         try{
             User user = em.createNamedQuery(User.Queries.findById, User.class)
                     .setParameter("id", userId)
                     .getSingleResult();
-            Car car = new Car(brand, model, colour, vehicleRegistrationPlate);
+            CarType carType = em.createNamedQuery(CarType.Queries.findById, CarType.class)
+                    .setParameter("id", carTypeId)
+                    .getSingleResult();
+            et.begin();
+            Car car = new Car(brand, model, colour, vehicleRegistrationPlate, carType);
             car.setUser(user);
+            em.persist(car);
+            et.commit();
             return car;
-        }catch(NoResultException e){
+        }catch(RollbackException | NoResultException e){
             return null;
         }
     }
-
-    //TODO
-    @Override
-    public Object createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate, Long carTypeId) {
-        return null;
-    }
-
 
     @Override
     public Object getCar(Long carId) {
@@ -381,10 +423,18 @@ public class CarParkService extends AbstractCarParkService{
             return null;
         }
     }
-    //TODO: UPDATE CAR
     @Override
     public Object updateCar(Object car) {
-        return null;
+        try{
+            et.begin();
+            em.merge(car);
+            et.commit();
+            return em.createNamedQuery(Car.Queries.findById, Car.class)
+                    .setParameter("id", ((Car) car).getId())
+                    .getSingleResult();
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
     }
     @Override
     public Object deleteCar(Long carId) {
@@ -398,7 +448,7 @@ public class CarParkService extends AbstractCarParkService{
                     .executeUpdate();
             et.commit();
             return deletedCar;
-        }catch(NoResultException e){
+        }catch(RollbackException | NoResultException e){
             return null;
         }
     }
@@ -412,7 +462,7 @@ public class CarParkService extends AbstractCarParkService{
             em.persist(user);
             et.commit();
             return user;
-        }catch(NoResultException e){
+        }catch(RollbackException | NoResultException e){
             return null;
         }
     }
@@ -439,17 +489,27 @@ public class CarParkService extends AbstractCarParkService{
     @Override
     public List<Object> getUsers() {
         try{
-            return Collections.singletonList(em.createNamedQuery(User.Queries.findAll, User.class)
-                    .getResultList());
+            List<User> userList = em.createNamedQuery(User.Queries.findAll, User.class)
+                    .getResultList();
+            return new ArrayList<>(userList);
         }catch (NoResultException e){
             return null;
         }
     }
-    //TODO: UPDATE USER
     @Override
     public Object updateUser(Object user) {
-        return null;
+        try{
+            et.begin();
+            em.merge(user);
+            et.commit();
+            return em.createNamedQuery(User.Queries.findById, User.class)
+                    .setParameter("id", ((User) user).getId())
+                    .getSingleResult();
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
     }
+
     @Override
     public Object deleteUser(Long userId) {
         try{
@@ -462,12 +522,11 @@ public class CarParkService extends AbstractCarParkService{
                     .executeUpdate();
             et.commit();
             return deletedUser;
-        }catch (NoResultException e){
+        }catch (RollbackException | NoResultException e){
             return null;
         }
     }
 
-    //TODO RESERVATION -> Check if cartype in parkingspot allowed types
     @Override
     public Object createReservation(Long parkingSpotId, Long cardId) {
         try{
@@ -478,33 +537,83 @@ public class CarParkService extends AbstractCarParkService{
                     .setParameter("id", parkingSpotId)
                     .getSingleResult();
             if(!parkingSpot.isAvailable()) return null;
-            //cartype in parkingspot allowed types?
             if(parkingSpot.getCarType() != car.getCarType()) return null;
-//            Reservation reservation = new Reservation(parkingSpotId, cardId, new Date());
+            et.begin();
+            Reservation reservation = new Reservation(parkingSpot, cardId, new Date());
+            em.persist(reservation);
+            et.commit();
+            return  reservation;
+        }catch (RollbackException | NoResultException e){
+            return null;
+        }
+    }
+    @Override
+    public Object endReservation(Long reservationId) {
+        try{
+            Reservation reservation = em.createNamedQuery(Reservation.Queries.findById, Reservation.class)
+                    .setParameter("id", reservationId)
+                    .getSingleResult();
+            ParkingSpot parkingSpot = reservation.getParkingSpot();
+            int price = parkingSpot.getCarParkFloor().getCarPark().getPricePerHour();
+            long totalTime = new Date().getTime() - reservation.getStartTime().getTime();
+            long totalHours = totalTime/1000/60/60;
+            Float totalPrice = (float) Math.round(totalHours * price);
+            et.begin();
+            em.merge(reservation);
+            et.commit();
+            return reservation;
         }catch (NoResultException e){
             return null;
         }
-        return null;
     }
-    //TODO
-    @Override
-    public Object endReservation(Long reservationId) {
-        return null;
-    }
-    //TODO
+
     @Override
     public List<Object> getReservations(Long parkingSpotId, Date date) {
-        return null;
+        try{
+            ParkingSpot parkingSpot = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
+                    .setParameter("id", parkingSpotId)
+                    .getSingleResult();
+            List<Reservation> allReservations = parkingSpot.getReservations();
+            List<Object> reservations = new ArrayList<>();
+            for(Reservation reservation : allReservations){
+                Date reservationDate = reservation.getStartTime();
+                if(reservationDate.after(date)){
+                    reservations.add(reservation);
+                }
+            }
+            return reservations;
+
+        }catch (NoResultException e) {
+            return null;
+        }
     }
-    //TODO
     @Override
     public List<Object> getMyReservations(Long userId) {
-        return null;
+        try{
+            List<Object> userReservations = new ArrayList<>();
+            List <Car> userCars = em.createNamedQuery(User.Queries.findById, User.class)
+                    .setParameter("id", userId)
+                    .getSingleResult().getCars();
+            for(Car car : userCars){
+                List<Reservation> userCarReservations = car.getReservations();
+                userReservations.addAll(userCarReservations);
+            }
+            return userReservations;
+        }catch (NoResultException e){
+            return null;
+        }
     }
-    //TODO
     @Override
     public Object updateReservation(Object reservation) {
-        return null;
+        try {
+            et.begin();
+            em.merge(reservation);
+            et.commit();
+            return em.createNamedQuery(Reservation.Queries.findById, Reservation.class)
+                    .setParameter("id", ((Reservation) reservation).getId());
+        }catch (RollbackException e){
+            return null;
+        }
     }
 
     //CARTYPES

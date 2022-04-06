@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.vsa.pr1b.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -10,7 +11,7 @@ import java.util.List;
 @NamedQuery(name = User.Queries.findById, query = "select user from User user where user.id = :id")
 @NamedQuery(name = User.Queries.findByEmail, query = "select user from User user where user.email = :email")
 @NamedQuery(name = User.Queries.deleteById, query = "delete from User user where user.id = :id")
-public class User {
+public class User implements Serializable {
     public static final class Queries{
         public static final String findAll = "findAll";
         public static final String findById = "findById";

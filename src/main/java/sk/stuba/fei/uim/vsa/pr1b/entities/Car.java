@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.vsa.pr1b.entities;
 import jdk.jfr.Name;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -10,7 +11,7 @@ import java.util.List;
 @NamedQuery(name = Car.Queries.findAll, query = "select car from Car car")
 @NamedQuery(name = Car.Queries.findById, query = "select car from Car car where car.id = :id")
 @NamedQuery(name = Car.Queries.deleteById, query = "delete from Car car where car.id = :id")
-public class Car {
+public class Car implements Serializable {
     public static final class Queries{
         public static final String findAll = "findAll";
         public static final String findById = "findById";
@@ -34,12 +35,16 @@ public class Car {
     @ManyToOne
     private CarType carType;
 
+    @OneToMany(mappedBy = "car")
+    private List<Reservation> reservations;
 
-    public Car(String brand, String model, String colour, String vehicleRegistrationPlate) {
+
+    public Car(String brand, String model, String colour, String vehicleRegistrationPlate, CarType carType) {
         this.brand = brand;
         this.model = model;
         this.colour = colour;
         this.vehicleRegistrationPlate = vehicleRegistrationPlate;
+        this.carType = carType;
     }
 
     public Car() {
@@ -97,5 +102,13 @@ public class Car {
 
     public void setCarType(CarType carType) {
         this.carType = carType;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
