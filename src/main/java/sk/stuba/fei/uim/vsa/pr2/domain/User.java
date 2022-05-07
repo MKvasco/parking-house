@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr1b.entities;
+package sk.stuba.fei.uim.vsa.pr2.domain;
 
 
 import javax.persistence.*;

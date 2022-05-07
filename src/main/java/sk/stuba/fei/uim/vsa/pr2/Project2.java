@@ -33,7 +33,7 @@ public class Project2 {
             }));
             System.out.println("Last steps of setting up the application...");
             postStart();
-            System.out.println(String.format("Application started.%nStop the application using CRL+C"));
+            System.out.printf("Application started.%nStop the application using CRL+C%n");
             Thread.currentThread().join();
         } catch (InterruptedException e) {
             LOGGER.log(Level.SEVERE, null, e);
