@@ -6,15 +6,17 @@ public class CarParkDto extends Dto {
 
     private String name;
     private String address;
-    private Integer pricePerHour;
-    private List<CarParkFloorDto> carParkFloors;
+    private Integer price;
+    private List<CarParkFloorDto> floors;
 
-    public CarParkDto(String name, String address, Integer pricePerHour, List<CarParkFloorDto> carParkFloors) {
+    public CarParkDto(String name, String address, Integer price, List<CarParkFloorDto> floors) {
         this.name = name;
         this.address = address;
-        this.pricePerHour = pricePerHour;
-        this.carParkFloors = carParkFloors;
+        this.price = price;
+        this.floors = floors;
     }
+
+    public CarParkDto(){}
 
     @Override
     public String getName() {
@@ -30,23 +32,33 @@ public class CarParkDto extends Dto {
         return address;
     }
 
-    public Integer getPricePerHour() {
-        return pricePerHour;
+    public Integer getPrice() {
+        return price;
     }
 
-    public List<CarParkFloorDto> getCarParkFloors() {
-        return carParkFloors;
+    public List<CarParkFloorDto> getFloors() {
+        return floors;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setPricePerHour(Integer pricePerHour) {
-        this.pricePerHour = pricePerHour;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
-    public void setCarParkFloors(List<CarParkFloorDto> carParkFloors) {
-        this.carParkFloors = carParkFloors;
+    public void setFloors(List<CarParkFloorDto> floors) {
+        this.floors = floors;
+    }
+
+    @Override
+    public String toString() {
+        return "CarParkDto{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", price=" + price +
+                ", floors=" + floors +
+                '}';
     }
 }

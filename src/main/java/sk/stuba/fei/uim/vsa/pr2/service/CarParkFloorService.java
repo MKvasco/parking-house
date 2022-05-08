@@ -14,7 +14,7 @@ public class CarParkFloorService {
     private final EntityManager em;
     private final EntityTransaction et;
 
-    protected CarParkFloorService() {
+    public CarParkFloorService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();

@@ -18,6 +18,7 @@ public class ParkingSpotDto extends Dto{
         this.carType = carType;
         this.reservations = reservations;
     }
+    public ParkingSpotDto(){}
 
     public String getIdentifier() {
         return identifier;

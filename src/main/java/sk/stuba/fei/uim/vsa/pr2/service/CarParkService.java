@@ -10,13 +10,13 @@ public class CarParkService{
     private final EntityManager em;
     private final EntityTransaction et;
 
-    protected CarParkService() {
+    public CarParkService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
     }
 
-    public Object createCarPark(String name, String address, Integer pricePerHour) {
+    public CarPark createCarPark(String name, String address, Integer pricePerHour) {
         try{
             et.begin();
             CarPark carPark = new CarPark(name, address, pricePerHour);
@@ -28,7 +28,7 @@ public class CarParkService{
         }
     }
 
-    public Object getCarPark(Long carParkId) {
+    public CarPark getCarPark(Long carParkId) {
         try{
             return em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id", carParkId)
@@ -38,7 +38,7 @@ public class CarParkService{
         }
     }
 
-    public Object getCarPark(String carParkName) {
+    public CarPark getCarPark(String carParkName) {
         try{
             return em.createNamedQuery(CarPark.Queries.findByName, CarPark.class)
                     .setParameter("name", carParkName)
@@ -48,7 +48,7 @@ public class CarParkService{
         }
     }
 
-    public List<Object> getCarParks() {
+    public List<CarPark> getCarParks() {
         try{
             List<CarPark> carParkList = em.createNamedQuery(CarPark.Queries.findAll, CarPark.class)
                     .getResultList();
@@ -58,7 +58,7 @@ public class CarParkService{
         }
     }
 
-    public Object updateCarPark(Object carPark) {
+    public CarPark updateCarPark(Object carPark) {
         try{
             et.begin();
             em.merge(carPark);
@@ -71,7 +71,7 @@ public class CarParkService{
         }
     }
 
-    public Object deleteCarPark(Long carParkId) {
+    public CarPark deleteCarPark(Long carParkId) {
         try{
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id", carParkId)

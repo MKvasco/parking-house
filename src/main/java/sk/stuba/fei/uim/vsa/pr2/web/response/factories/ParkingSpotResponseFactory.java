@@ -10,7 +10,7 @@ public class ParkingSpotResponseFactory implements ResponseFactory<ParkingSpot, 
     }
 
     @Override
-    public ParkingSpot transformToEntity(ParkingSpot dot) {
+    public ParkingSpot transformToEntity(ParkingSpotDto dto) {
         return null;
     }
 }

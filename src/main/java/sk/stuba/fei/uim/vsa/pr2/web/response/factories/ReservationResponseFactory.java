@@ -10,7 +10,7 @@ public class ReservationResponseFactory implements ResponseFactory<Reservation, 
     }
 
     @Override
-    public Reservation transformToEntity(Reservation dot) {
+    public Reservation transformToEntity(ReservationDto dto) {
         return null;
     }
 }

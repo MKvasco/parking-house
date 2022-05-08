@@ -14,6 +14,8 @@ public class CarParkFloorDto extends Dto{
         this.carPark = carPark;
     }
 
+    public CarParkFloorDto(){}
+
     public String getFloorIdentifier() {
         return floorIdentifier;
     }

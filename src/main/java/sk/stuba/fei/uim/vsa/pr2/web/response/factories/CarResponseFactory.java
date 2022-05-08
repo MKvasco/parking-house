@@ -10,7 +10,7 @@ public class CarResponseFactory implements ResponseFactory<Car, CarDto> {
     }
 
     @Override
-    public Car transformToEntity(Car dot) {
+    public Car transformToEntity(CarDto dto) {
         return null;
     }
 }

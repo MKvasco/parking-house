@@ -10,7 +10,7 @@ public class CarParkFloorResponseFactory implements ResponseFactory<CarParkFloor
     }
 
     @Override
-    public CarParkFloor transformToEntity(CarParkFloor dot) {
+    public CarParkFloor transformToEntity(CarParkFloorDto dto) {
         return null;
     }
 }

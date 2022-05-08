@@ -10,7 +10,7 @@ public class UserResponseFactory implements ResponseFactory<User, UserDto>{
     }
 
     @Override
-    public User transformToEntity(User dot) {
+    public User transformToEntity(UserDto dto) {
         return null;
     }
 }
