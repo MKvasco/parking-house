@@ -1,10 +1,9 @@
-package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
+package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
 import sk.stuba.fei.uim.vsa.pr2.service.CarParkService;
-import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.ParkingSpotDto;
 
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CarParkFloorResponseFactory implements ResponseFactory<CarParkFloor, CarParkFloorDto>{
+public class CarParkFloorRequestFactory implements RequestFactory<CarParkFloor, CarParkFloorDto> {
     @Override
     public CarParkFloorDto transformToDto(CarParkFloor entity) {
         CarParkFloorDto carParkFloorDto = new CarParkFloorDto();
@@ -24,7 +23,7 @@ public class CarParkFloorResponseFactory implements ResponseFactory<CarParkFloor
         carParkFloorDto.setCarPark(carPark.getId());
         List<ParkingSpot> spots = entity.getParkingSpots();
         if(!spots.isEmpty()){
-            ParkingSpotResponseFactory parkingSpotResponseFactory = new ParkingSpotResponseFactory();
+            ParkingSpotRequestFactory parkingSpotResponseFactory = new ParkingSpotRequestFactory();
             carParkFloorDto.setSpots(entity.getParkingSpots().stream().map(parkingSpotResponseFactory::transformToDto).collect(Collectors.toList()));
         }else{
             carParkFloorDto.setSpots(new ArrayList<>());
@@ -49,7 +48,7 @@ public class CarParkFloorResponseFactory implements ResponseFactory<CarParkFloor
             //TODO: dorobit ked je carpark id null
         }
         if(!parkingSpotDtoList.isEmpty()){
-            ParkingSpotResponseFactory parkingSpotResponseFactory = new ParkingSpotResponseFactory();
+            ParkingSpotRequestFactory parkingSpotResponseFactory = new ParkingSpotRequestFactory();
             carParkFloor.setParkingSpots(parkingSpotDtoList.stream().map(parkingSpotResponseFactory::transformToEntity).collect(Collectors.toList()));
         }else{
             carParkFloor.setParkingSpots(new ArrayList<>());

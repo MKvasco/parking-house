@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.web.response;
+package sk.stuba.fei.uim.vsa.pr2.web.request;
 
 public class CarTypeDto {
 

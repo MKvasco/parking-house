@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.vsa.pr2.service;
 
+import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.domain.User;
 
 import javax.persistence.*;
@@ -11,12 +12,12 @@ public class UserService {
     private final EntityManager em;
     private final EntityTransaction et;
 
-    protected UserService() {
+    public UserService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
     }
-    public Object createUser(String firstname, String lastname, String email) {
+    public User createUser(String firstname, String lastname, String email) {
         try{
             et.begin();
             User user = new User(firstname, lastname, email);
@@ -27,7 +28,7 @@ public class UserService {
             return null;
         }
     }
-    public Object getUser(Long userId) {
+    public User getUser(Long userId) {
         try{
             return em.createNamedQuery(User.Queries.findById, User.class)
                     .setParameter("id", userId)
@@ -36,7 +37,7 @@ public class UserService {
             return null;
         }
     }
-    public Object getUser(String email) {
+    public User getUser(String email) {
         try{
             return em.createNamedQuery(User.Queries.findByEmail, User.class)
                     .setParameter("email", email)
@@ -45,7 +46,7 @@ public class UserService {
             return null;
         }
     }
-    public List<Object> getUsers() {
+    public List<User> getUsers() {
         try{
             List<User> userList = em.createNamedQuery(User.Queries.findAll, User.class)
                     .getResultList();
@@ -54,7 +55,7 @@ public class UserService {
             return null;
         }
     }
-    public Object updateUser(Object user) {
+    public User updateUser(Object user) {
         try{
             et.begin();
             em.merge(user);
@@ -67,19 +68,7 @@ public class UserService {
         }
     }
 
-    public Object deleteUser(Long userId) {
-        try{
-            User deletedUser = em.createNamedQuery(User.Queries.findById, User.class)
-                    .setParameter("id", userId)
-                    .getSingleResult();
-            et.begin();
-            em.createNamedQuery(User.Queries.deleteById, User.class)
-                    .setParameter("id", userId)
-                    .executeUpdate();
-            et.commit();
-            return deletedUser;
-        }catch (RollbackException | NoResultException e){
-            return null;
-        }
+    public User deleteUser(Long userId) {
+        return null;
     }
 }

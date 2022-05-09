@@ -1,9 +1,6 @@
 package sk.stuba.fei.uim.vsa.pr2.service;
 
-import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
-import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
-import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
-import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
+import sk.stuba.fei.uim.vsa.pr2.domain.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -13,14 +10,14 @@ public class ParkingSpotService {
     private final EntityManager em;
     private final EntityTransaction et;
 
-    protected ParkingSpotService() {
+    public ParkingSpotService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
     }
 
 
-    public Object createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
+    public ParkingSpot createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
         try{
             ParkingSpot parkingSpot = null;
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
@@ -50,7 +47,7 @@ public class ParkingSpotService {
         }
     }
 
-    public Object getParkingSpot(Long parkingSpotId) {
+    public ParkingSpot getParkingSpot(Long parkingSpotId) {
         try{
             return em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
                     .setParameter("id", parkingSpotId)
@@ -59,7 +56,22 @@ public class ParkingSpotService {
             return null;
         }
     }
-    public List<Object> getParkingSpots(Long carParkId, String floorIdentifier) {
+    public List<ParkingSpot> getParkingSpots(Long carParkId){
+        try{
+            List<ParkingSpot> parkingSpots = new ArrayList<>();
+            List<CarParkFloor> carParkFloors = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
+                    .setParameter("id", carParkId)
+                    .getSingleResult()
+                    .getCarParkFloors();
+            for(CarParkFloor floor : carParkFloors){
+                parkingSpots.addAll(floor.getParkingSpots());
+            }
+            return parkingSpots;
+        }catch(NoResultException e){
+            return new ArrayList<>();
+        }
+    }
+    public List<ParkingSpot> getParkingSpots(Long carParkId, String floorIdentifier) {
         try{
             List<ParkingSpot> parkingSpots = new ArrayList<>();
             List<CarParkFloor> carParkFloors = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
@@ -76,7 +88,7 @@ public class ParkingSpotService {
             return new ArrayList<>();
         }
     }
-    public Map<String, List<Object>> getParkingSpots(Long carParkId) {
+    public Map<String, List<Object>> getParkingSpotsHash(Long carParkId) {
         try{
             List<CarParkFloor> carParkFloors = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id", carParkId)
@@ -149,23 +161,7 @@ public class ParkingSpotService {
             return null;
         }
     }
-    public Object deleteParkingSpot(Long parkingSpotId) {
-        try{
-            Object ps = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
-                    .setParameter("id", parkingSpotId)
-                    .getSingleResult();
-            CarParkFloor carParkFloor = ((ParkingSpot) ps).getCarParkFloor();
-            CarType carType = ((ParkingSpot) ps).getCarType();
-            carParkFloor.removeParkingSpot((ParkingSpot) ps);
-            carType.removeParkingSpot((ParkingSpot) ps);
-            et.begin();
-            em.createNamedQuery(ParkingSpot.Queries.deleteById, ParkingSpot.class)
-                    .setParameter("id", parkingSpotId)
-                    .executeUpdate();
-            et.commit();
-            return ps;
-        }catch(RollbackException | NoResultException e){
-            return null;
-        }
+    public ParkingSpot deleteParkingSpot(Long parkingSpotId) {
+        return null;
     }
 }

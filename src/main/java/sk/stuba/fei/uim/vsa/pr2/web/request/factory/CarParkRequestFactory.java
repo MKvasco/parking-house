@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
+package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CarParkResponseFactory implements ResponseFactory<CarPark, CarParkDto> {
+public class CarParkRequestFactory implements RequestFactory<CarPark, CarParkDto> {
     @Override
     public CarParkDto transformToDto(CarPark entity) {
         CarParkDto carParkDto = new CarParkDto();
@@ -23,7 +23,7 @@ public class CarParkResponseFactory implements ResponseFactory<CarPark, CarParkD
         carParkDto.setPrice(price);
         List<CarParkFloor> carParkFloors = entity.getCarParkFloors();
         if(!carParkFloors.isEmpty()){
-            CarParkFloorResponseFactory carParkFloorResponseFactory = new CarParkFloorResponseFactory();
+            CarParkFloorRequestFactory carParkFloorResponseFactory = new CarParkFloorRequestFactory();
             carParkDto.setFloors(carParkFloors.stream().map(carParkFloorResponseFactory::transformToDto).collect(Collectors.toList()));
         }else{
             carParkDto.setFloors(new ArrayList<>());
@@ -42,7 +42,7 @@ public class CarParkResponseFactory implements ResponseFactory<CarPark, CarParkD
         carPark.setAddress(address);
         carPark.setPricePerHour(price);
         if(!carParkFloorDtoList.isEmpty()){
-            CarParkFloorResponseFactory carParkFloorResponseFactory = new CarParkFloorResponseFactory();
+            CarParkFloorRequestFactory carParkFloorResponseFactory = new CarParkFloorRequestFactory();
             carPark.setCarParkFloors(carParkFloorDtoList.stream().map(carParkFloorResponseFactory::transformToEntity).collect(Collectors.toList()));
         }
         return carPark;

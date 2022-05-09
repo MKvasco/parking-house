@@ -1,9 +1,9 @@
-package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
+package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarTypeDto;
 
-public class CarTypeResponseFactory implements ResponseFactory<CarType, CarTypeDto> {
+public class CarTypeRequestFactory implements RequestFactory<CarType, CarTypeDto> {
 
     @Override
     public CarTypeDto transformToDto(CarType entity) {

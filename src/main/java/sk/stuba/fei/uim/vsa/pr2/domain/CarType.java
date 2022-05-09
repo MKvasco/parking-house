@@ -60,6 +60,7 @@ public class CarType implements Serializable {
         this.name = name;
     }
 
+
     public void setCars(List<Car> cars) {
         this.cars = cars;
     }

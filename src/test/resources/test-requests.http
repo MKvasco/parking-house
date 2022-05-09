@@ -27,15 +27,57 @@ Accept: application/json
   "price", 2,
 }
 
-###TODO:PUT REQUEST
-
 ###DELETE CARPARK
-DELETE http://localhost:8080/carparks/2
+DELETE http://localhost:8080/carparks/1
 Accept: application/json
 
+###GET FLOOR
+GET http://localhost:8080/carparkfloors/4
+Accept: application/json
 
+###GET FLOORS
+GET http://localhost:8080/carparks/1/floors
+Accept: application/json
 
+###POST FLOOR
+POST http://localhost:8080/carparks/3/floors
+Accept: application/json
 
+{
+  "identifier": "osme_poschodie"
+}
+
+###GET PARKING SPOTS
+GET http://localhost:8080/carparks/1/spots
+Accept: application/json
+
+###GET PARKING SPOTS
+GET http://localhost:8080/carparks/1/floors/first_floor/spots
+Accept: application/json
+
+###GET PARKING SPOTS ID
+GET http://localhost:8080/parkingspots/13
+Accept: application/json
+
+###GET CARTYPES
+GET http://localhost:8080/cartypes
+Accept: application/json
+
+###GET CARTYPE
+GET http://localhost:8080/cartypes/10
+Accept: application/json
+
+###GET USERS
+GET http://localhost:8080/users
+Accept: application/json
+
+###GET USER
+GET http://localhost:8080/users/17
+Accept: application/json
+
+###GET CARS
+GET http://localhost:8080/cars
+Accept: application/json
 
 ###Create user
 POST http://localhost:8080/users

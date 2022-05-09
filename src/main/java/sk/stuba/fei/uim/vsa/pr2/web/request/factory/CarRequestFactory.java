@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
+package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CarResponseFactory implements ResponseFactory<Car, CarDto> {
+public class CarRequestFactory implements RequestFactory<Car, CarDto> {
     @Override
     public CarDto transformToDto(Car entity) {
         CarDto carDto = new CarDto();
@@ -20,11 +20,11 @@ public class CarResponseFactory implements ResponseFactory<Car, CarDto> {
         carDto.setUser(null);
         carDto.setUser(entity.getUser().getId());
 
-        carDto.setCarType(new CarTypeResponseFactory().transformToDto(entity.getCarType()));
+        carDto.setCarType(new CarTypeRequestFactory().transformToDto(entity.getCarType()));
 
         List<Reservation> reservations = entity.getReservations();
         if(!reservations.isEmpty()){
-            ReservationResponseFactory reservationResponseFactory = new ReservationResponseFactory();
+            ReservationRequestFactory reservationResponseFactory = new ReservationRequestFactory();
             carDto.setReservations(reservations.stream().map(reservationResponseFactory::transformToDto).collect(Collectors.toList()));
         }else{
             carDto.setReservations(new ArrayList<>());

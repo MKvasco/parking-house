@@ -11,21 +11,20 @@ import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkResponseFactory;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@Path("/carparkfloors")
+@Path("/")
 public class CarParkController {
-
-    private static final Logger LOGGER = Logger.getLogger(CarParkController.class.getName());
 
     private final ObjectMapper json = new ObjectMapper();
     private final CarParkService service = new CarParkService();
     private final CarParkResponseFactory factory = new CarParkResponseFactory();
 
     @GET
+    @Path("/carparks")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCarParks() {
+        // TODO: PARAMETER SEARCH
         List<CarPark> carParks = service.getCarParks();
         List<CarParkDto> carParkDtoList = carParks.stream().map(factory::transformToDto).collect(Collectors.toList());
         if(carParkDtoList.isEmpty()){
@@ -36,7 +35,7 @@ public class CarParkController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/carparks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCarParks(@PathParam("id") Long id){
         CarPark carPark = service.getCarPark(id);
@@ -49,24 +48,25 @@ public class CarParkController {
     }
 
     @POST
+    @Path("/carparks")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createCarPark(String body) {
         try{
             CarParkDto carParkDto = json.readValue(body, CarParkDto.class);
-            CarPark carPark = factory.transformToEntity(carParkDto);
-            service.createCarPark(carPark.getName(), carPark.getAddress(), carPark.getPricePerHour());
+            CarPark carPark = service.createCarPark(carParkDto.getName(), carParkDto.getAddress(), carParkDto.getPrice());
             carParkDto = factory.transformToDto(carPark);
+            System.out.println(carParkDto);
             return Response.status(Response.Status.CREATED).entity(carParkDto).build();
         }catch (JsonProcessingException e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
-//    TODO:PUT REQUEST
+//    TODO:PUT
 
     @DELETE
-    @Path("/{id}")
+    @Path("/carparks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteCarPark(@PathParam("id") Long id) {
         CarPark carPark = service.getCarPark(id);

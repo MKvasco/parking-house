@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.vsa.pr2.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
+import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class CarParkFloorService {
         this.et = em.getTransaction();
     }
 
-    public Object createCarParkFloor(Long carParkId, String floorIdentifier) {
+    public CarParkFloor createCarParkFloor(Long carParkId, String floorIdentifier) {
         try{
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id",carParkId)
@@ -42,7 +43,7 @@ public class CarParkFloorService {
         }
     }
 
-    public Object getCarParkFloor(Long carParkFloorId) {
+    public CarParkFloor getCarParkFloor(Long carParkFloorId) {
         try{
             return em.createNamedQuery(CarParkFloor.Queries.findById, CarParkFloor.class)
                     .setParameter("id", carParkFloorId)
@@ -52,7 +53,7 @@ public class CarParkFloorService {
         }
     }
 
-    public List<Object> getCarParkFloors(Long carParkId) {
+    public List<CarParkFloor> getCarParkFloors(Long carParkId) {
         try{
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id",carParkId)
@@ -63,7 +64,7 @@ public class CarParkFloorService {
         }
     }
 
-    public Object updateCarParkFloor(Object carParkFloor) {
+    public CarParkFloor updateCarParkFloor(Object carParkFloor) {
         try{
             et.begin();
             em.merge(carParkFloor);
@@ -76,31 +77,11 @@ public class CarParkFloorService {
         }
     }
 
-    public Object deleteCarParkFloor(Long carParkId, String floorIdentifier) {
-        try{
-            CarParkFloor carParkFloor = null;
-            CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
-                    .setParameter("id",carParkId)
-                    .getSingleResult();
-            for(CarParkFloor floor : carPark.getCarParkFloors()){
-                System.out.println(floor.getFloorIdentifier());
-                if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
-                    carPark.removeCarParkFloor(floor);
-                    et.begin();
-                    em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)
-                            .setParameter("id", floor.getId())
-                            .executeUpdate();
-                    et.commit();
-                    carParkFloor = floor;
-                }
-            }
-            return carParkFloor;
-        }catch(RollbackException | NoResultException e){
-            return null;
-        }
+    public CarParkFloor deleteCarParkFloor(Long carParkId, String floorIdentifier) {
+        return null;
     }
 
-    public Object deleteCarParkFloor(Long carParkFloorId) {
+    public CarParkFloor deleteCarParkFloor(Long carParkFloorId) {
         try{
             CarParkFloor carParkFloor = em.createNamedQuery(CarParkFloor.Queries.findById, CarParkFloor.class)
                     .setParameter("id", carParkFloorId)

@@ -25,7 +25,7 @@ public class ParkingSpot implements Serializable {
 
     private String identifier;
     @Transient
-    private boolean available;
+    private Boolean available = true;
 
     @ManyToOne
     private CarParkFloor carParkFloor;
@@ -38,9 +38,7 @@ public class ParkingSpot implements Serializable {
 
     public ParkingSpot(CarParkFloor carParkFloor, CarType carType, String identifier){
         this.carParkFloor = carParkFloor;
-        this.available = true;
         this.carType = carType;
-        this.reservations = null;
         this.identifier = identifier;
     }
     public ParkingSpot(){}
@@ -57,7 +55,7 @@ public class ParkingSpot implements Serializable {
         return carParkFloor;
     }
 
-    public boolean isAvailable() {
+    public Boolean isAvailable() {
         return available;
     }
 
@@ -65,7 +63,7 @@ public class ParkingSpot implements Serializable {
         this.identifier = identifier;
     }
 
-    public void setAvailable(boolean available) {
+    public void setAvailable(Boolean available) {
         this.available = available;
     }
 

@@ -26,11 +26,11 @@ public class CarParkFloor implements Serializable {
     private CarPark carPark;
 
     public CarParkFloor(CarPark carPark, String floorIdentifier) {
-
         this.floorIdentifier = floorIdentifier;
         this.carPark = carPark;
 
     }
+
     public CarParkFloor() {}
 
     public Long getId() {
@@ -49,8 +49,16 @@ public class CarParkFloor implements Serializable {
         return carPark;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setFloorIdentifier(String floorIdentifier) {
         this.floorIdentifier = floorIdentifier;
+    }
+
+    public void setParkingSpots(List<ParkingSpot> parkingSpots) {
+        this.parkingSpots = parkingSpots;
     }
 
     public void setCarPark(CarPark carPark) {

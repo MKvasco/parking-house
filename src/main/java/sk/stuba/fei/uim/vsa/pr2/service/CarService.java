@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.vsa.pr2.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
+import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
 import sk.stuba.fei.uim.vsa.pr2.domain.User;
 
 import javax.persistence.*;
@@ -14,12 +15,12 @@ public class CarService {
     private final EntityManager em;
     private final EntityTransaction et;
 
-    protected CarService() {
+    public CarService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
     }
-    public Object createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate, Long carTypeId) {
+    public Car createCar(Long userId, String brand, String model, String colour, String vehicleRegistrationPlate, Long carTypeId) {
         try{
             User user = em.createNamedQuery(User.Queries.findById, User.class)
                     .setParameter("id", userId)
@@ -39,8 +40,16 @@ public class CarService {
             return null;
         }
     }
+    public List<Car> getCars(){
+        try{
+            return em.createNamedQuery(Car.Queries.findAll, Car.class)
+                    .getResultList();
+        }catch(NoResultException e){
+            return new ArrayList<>();
+        }
+    }
 
-    public Object getCar(Long carId) {
+    public Car getCar(Long carId) {
         try{
             return em.createNamedQuery(Car.Queries.findById, Car.class)
                     .setParameter("id", carId)
@@ -49,7 +58,7 @@ public class CarService {
             return null;
         }
     }
-    public Object getCar(String vehicleRegistrationPlate) {
+    public Car getCar(String vehicleRegistrationPlate) {
         try{
 
             List<Car> carList = em.createNamedQuery(Car.Queries.findAll, Car.class)
@@ -64,7 +73,7 @@ public class CarService {
         }
         return null;
     }
-    public List<Object> getCars(Long userId) {
+    public List<Car> getCars(Long userId) {
         try{
             User user = em.createNamedQuery(User.Queries.findById, User.class)
                     .setParameter("id", userId)
@@ -75,7 +84,7 @@ public class CarService {
             return new ArrayList<>();
         }
     }
-    public Object updateCar(Object car) {
+    public Car updateCar(Object car) {
         try{
             et.begin();
             em.merge(car);
@@ -87,23 +96,7 @@ public class CarService {
             return null;
         }
     }
-    public Object deleteCar(Long carId) {
-        try{
-            Car deletedCar = em.createNamedQuery(Car.Queries.findById, Car.class)
-                    .setParameter("id", carId)
-                    .getSingleResult();
-            CarType carType = deletedCar.getCarType();
-            User user = deletedCar.getUser();
-            user.removeCar(deletedCar);
-            carType.removeCar(deletedCar);
-            et.begin();
-            em.createNamedQuery(Car.Queries.deleteById, Car.class)
-                    .setParameter("id", carId)
-                    .executeUpdate();
-            et.commit();
-            return deletedCar;
-        }catch(RollbackException | NoResultException e){
-            return null;
-        }
+    public Car deleteCar(Long carId) {
+        return null;
     }
 }

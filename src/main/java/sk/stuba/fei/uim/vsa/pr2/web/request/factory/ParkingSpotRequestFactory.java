@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
+package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ParkingSpotResponseFactory implements ResponseFactory<ParkingSpot, ParkingSpotDto> {
+public class ParkingSpotRequestFactory implements RequestFactory<ParkingSpot, ParkingSpotDto> {
     @Override
     public ParkingSpotDto transformToDto(ParkingSpot entity) {
         ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
@@ -24,12 +24,12 @@ public class ParkingSpotResponseFactory implements ResponseFactory<ParkingSpot, 
         parkingSpotDto.setIdentifier(identifier);
         parkingSpotDto.setCarParkFloor(carParkFloor);
         parkingSpotDto.setCarPark(carPark);
-        parkingSpotDto.setCarType(new CarTypeResponseFactory().transformToDto(carType));
+        parkingSpotDto.setCarType(new CarTypeRequestFactory().transformToDto(carType));
         parkingSpotDto.setFree(free);
 
         List<Reservation> reservations = entity.getReservations();
         if(!reservations.isEmpty()){
-            ReservationResponseFactory reservationResponseFactory = new ReservationResponseFactory();
+            ReservationRequestFactory reservationResponseFactory = new ReservationRequestFactory();
             parkingSpotDto.setReservations(reservations.stream().map(reservationResponseFactory::transformToDto).collect(Collectors.toList()));
         }else{
             parkingSpotDto.setReservations(new ArrayList<>());

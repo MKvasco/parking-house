@@ -72,18 +72,6 @@ public class CarParkService{
     }
 
     public CarPark deleteCarPark(Long carParkId) {
-        try{
-            CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
-                    .setParameter("id", carParkId)
-                    .getSingleResult();
-            et.begin();
-            em.createNamedQuery(CarPark.Queries.deleteById, CarPark.class)
-                    .setParameter("id", carParkId)
-                    .executeUpdate();
-            et.commit();
-            return carPark;
-        }catch (NoResultException | RollbackException e){
-            return null;
-        }
+        return null;
     }
 }

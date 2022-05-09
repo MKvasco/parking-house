@@ -1,8 +1,6 @@
 package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
 
-import sk.stuba.fei.uim.vsa.pr2.web.response.Dto;
-
-public interface ResponseFactory<R, T extends Dto> {
+public interface ResponseFactory<R, T> {
 
     T transformToDto(R entity);
 
