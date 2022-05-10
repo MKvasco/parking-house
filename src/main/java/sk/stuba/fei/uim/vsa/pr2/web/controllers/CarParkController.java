@@ -46,7 +46,7 @@ public class CarParkController {
             return Response.status(Response.Status.OK).entity(carParkDto).build();
         }
     }
-
+    // TODO: VNORENY POST
     @POST
     @Path("/carparks")
     @Produces(MediaType.APPLICATION_JSON)
@@ -69,11 +69,10 @@ public class CarParkController {
     @Path("/carparks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteCarPark(@PathParam("id") Long id) {
-        CarPark carPark = service.getCarPark(id);
-        if(carPark == null){
+        CarPark carParkToDelete =  service.deleteCarPark(id);
+        if(carParkToDelete == null){
             return Response.status(Response.Status.NOT_FOUND).build();
         }else{
-            service.deleteCarPark(id);
             return Response.status(Response.Status.NO_CONTENT).build();
         }
     }

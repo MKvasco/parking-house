@@ -15,7 +15,40 @@ public class ParkingSpotService {
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
     }
-
+    public ParkingSpot createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier){
+        try{
+            // TODO: test this method multiple times because of cartype roolback
+            ParkingSpot parkingSpot = null;
+            CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
+                    .setParameter("id", carParkId)
+                    .getSingleResult();
+            List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
+            for(CarParkFloor floor : carParkFloors){
+                List<ParkingSpot> parkingSpots = floor.getParkingSpots();
+                for(ParkingSpot ps : parkingSpots){
+                    if(Objects.equals(ps.getIdentifier(), spotIdentifier))
+                        return null;
+                }
+                if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
+                    et.begin();
+                    CarType carType = em.createNamedQuery(CarType.Queries.findByName, CarType.class)
+                            .setParameter("name", "WithoutRestriction")
+                            .getSingleResult();
+                    if(carType == null){
+                        carType = new CarTypeService().createCarType ("WithoutRestriction");
+                    }
+                    parkingSpot = new ParkingSpot(floor, carType, spotIdentifier);
+                    floor.addParkingSpot(parkingSpot);
+                    carType.addParkingSpot(parkingSpot);
+                    em.persist(parkingSpot);
+                    et.commit();
+                }
+            }
+            return parkingSpot;
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
+    }
 
     public ParkingSpot createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier, Long carTypeId) {
         try{
@@ -36,6 +69,7 @@ public class ParkingSpotService {
                 if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
                     et.begin();
                     parkingSpot = new ParkingSpot(floor, carType, spotIdentifier);
+                    carType.addParkingSpot(parkingSpot);
                     floor.addParkingSpot(parkingSpot);
                     em.persist(parkingSpot);
                     et.commit();
@@ -162,6 +196,29 @@ public class ParkingSpotService {
         }
     }
     public ParkingSpot deleteParkingSpot(Long parkingSpotId) {
-        return null;
+        try{
+            ParkingSpot parkingSpot = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
+                    .setParameter("id", parkingSpotId)
+                    .getSingleResult();
+
+            // End all reservations on parking spot
+            List<Reservation> reservations = parkingSpot.getReservations();
+            if(!reservations.isEmpty()){
+                ReservationService reservationService = new ReservationService();
+                for(Reservation reservation : reservations){
+                    reservationService.endReservation(reservation.getId());
+                }
+            }
+
+            // Delete Parking spot
+            et.begin();
+            em.createNamedQuery(ParkingSpot.Queries.deleteById, ParkingSpot.class)
+                    .setParameter("id", parkingSpotId)
+                    .executeUpdate();
+            et.commit();
+            return parkingSpot;
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
     }
 }

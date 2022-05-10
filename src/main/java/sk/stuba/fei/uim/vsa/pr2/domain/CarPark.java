@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.vsa.pr2.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity

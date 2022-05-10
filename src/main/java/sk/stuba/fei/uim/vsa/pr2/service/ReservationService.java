@@ -21,7 +21,7 @@ public class ReservationService {
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
     }
-    public Object createReservation(Long parkingSpotId, Long cardId) {
+    public Reservation createReservation(Long parkingSpotId, Long cardId) {
         try{
             Car car = em.createNamedQuery(Car.Queries.findById, Car.class)
                     .setParameter("id", cardId)
@@ -43,7 +43,7 @@ public class ReservationService {
             return null;
         }
     }
-    public Object endReservation(Long reservationId) {
+    public Reservation endReservation(Long reservationId) {
         try{
             Reservation reservation = em.createNamedQuery(Reservation.Queries.findById, Reservation.class)
                     .setParameter("id", reservationId)
@@ -78,13 +78,13 @@ public class ReservationService {
         }
     }
 
-    public List<Object> getReservations(Long parkingSpotId, Date date) {
+    public List<Reservation> getReservations(Long parkingSpotId, Date date) {
         try {
             ParkingSpot parkingSpot = em.createNamedQuery(ParkingSpot.Queries.findById, ParkingSpot.class)
                     .setParameter("id", parkingSpotId)
                     .getSingleResult();
             List<Reservation> allReservations = parkingSpot.getReservations();
-            List<Object> reservations = new ArrayList<>();
+            List<Reservation> reservations = new ArrayList<>();
             SimpleDateFormat smf = new SimpleDateFormat("dd-MM-yyy");
             for (Reservation reservation : allReservations) {
                 if (smf.format(date).equals(smf.format(reservation.getStartTime()))) {
@@ -96,9 +96,9 @@ public class ReservationService {
             return new ArrayList<>();
         }
     }
-    public List<Object> getMyReservations(Long userId) {
+    public List<Reservation> getMyReservations(Long userId) {
         try{
-            List<Object> userReservations = new ArrayList<>();
+            List<Reservation> userReservations = new ArrayList<>();
             List <Car> userCars = em.createNamedQuery(User.Queries.findById, User.class)
                     .setParameter("id", userId)
                     .getSingleResult().getCars();
@@ -115,13 +115,14 @@ public class ReservationService {
             return new ArrayList<>();
         }
     }
-    public Object updateReservation(Object reservation) {
+    public Reservation updateReservation(Reservation reservation) {
         try {
             et.begin();
             em.merge(reservation);
             et.commit();
             return em.createNamedQuery(Reservation.Queries.findById, Reservation.class)
-                    .setParameter("id", ((Reservation) reservation).getId());
+                    .setParameter("id", reservation.getId())
+                    .getSingleResult();
         }catch (RollbackException e){
             return null;
         }

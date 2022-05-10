@@ -41,6 +41,10 @@ public class ParkingSpot implements Serializable {
         this.carType = carType;
         this.identifier = identifier;
     }
+    public ParkingSpot(CarParkFloor carParkFloor, String identifier){
+        this.carParkFloor = carParkFloor;
+        this.identifier = identifier;
+    }
     public ParkingSpot(){}
 
     public Long getId() {

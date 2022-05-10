@@ -1,10 +1,7 @@
 package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
@@ -59,6 +56,20 @@ public class ParkingSpotController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }else{
             return Response.status(Response.Status.OK).entity(parkingSpotDto).build();
+        }
+    }
+    // TODO: PUT
+    // TODO: POST
+
+    @DELETE
+    @Path("/parkingspots/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteParkingSpot(@PathParam("id") Long id){
+        ParkingSpot parkingSpot = service.deleteParkingSpot(id);
+        if(parkingSpot == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }else{
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
     }
 }

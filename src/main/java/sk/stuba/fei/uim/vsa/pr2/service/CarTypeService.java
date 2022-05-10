@@ -57,6 +57,19 @@ public class CarTypeService {
         }
     }
     public CarType deleteCarType(Long carTypeId) {
-        return null;
+        try{
+            CarType carType = em.createNamedQuery(CarType.Queries.findById, CarType.class)
+                    .setParameter("id", carTypeId)
+                    .getSingleResult();
+
+           et.begin();
+           em.createNamedQuery(CarType.Queries.deleteById, CarType.class)
+                   .setParameter("id", carTypeId)
+                   .executeUpdate();
+           et.commit();
+           return carType;
+        }catch (NoResultException | RollbackException e){
+            return null;
+        }
     }
 }

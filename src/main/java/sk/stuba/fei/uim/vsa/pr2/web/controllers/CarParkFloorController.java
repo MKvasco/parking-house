@@ -11,6 +11,7 @@ import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFloorResponseFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Path("/")
@@ -62,6 +63,17 @@ public class CarParkFloorController {
     }
     // TODO: IGNORE ID ATRRIBUTE IN JSON BODY
     // TODO: PUT
-    // TODO: DELETE
+    @DELETE
+    @Path("/carparks/{id}/floors/{identifier}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCarParkFloor(@PathParam("id") Long id, @PathParam("identifier") String identifier){
+       CarParkFloor carParkFloor = service.deleteCarParkFloor(id, identifier);
+       if(carParkFloor == null){
+           return Response.status(Response.Status.NOT_FOUND).build();
+       }else{
+           return Response.status(Response.Status.NO_CONTENT).build();
+       }
+
+    }
 
 }

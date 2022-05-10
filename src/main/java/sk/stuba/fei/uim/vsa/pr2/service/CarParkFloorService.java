@@ -78,7 +78,40 @@ public class CarParkFloorService {
     }
 
     public CarParkFloor deleteCarParkFloor(Long carParkId, String floorIdentifier) {
-        return null;
+        CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
+                .setParameter("id", carParkId)
+                .getSingleResult();
+
+        // Get Floor
+        CarParkFloor carParkFloor = null;
+        List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
+        for(CarParkFloor floor : carParkFloors){
+            if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
+                carParkFloor = floor;
+            }
+        }
+
+        //Get Parking spots to delete
+        if(carParkFloor != null){
+            List<ParkingSpot> parkingSpots = new ParkingSpotService().getParkingSpots(carParkId, floorIdentifier);
+            if(!parkingSpots.isEmpty()){
+                ParkingSpotService parkingSpotService = new ParkingSpotService();
+                for(ParkingSpot parkingSpot : parkingSpots){
+                    parkingSpotService.deleteParkingSpot(parkingSpot.getId());
+                }
+            }
+        // Delete CarParkFloor
+            try{
+                et.begin();
+                em.createNamedQuery(CarParkFloor.Queries.deleteById, CarParkFloor.class)
+                        .setParameter("id", carParkFloor.getId())
+                        .executeUpdate();
+                et.commit();
+            }catch (NoResultException | RollbackException e){
+                return null;
+            }
+        }
+        return carParkFloor;
     }
 
     public CarParkFloor deleteCarParkFloor(Long carParkFloorId) {

@@ -1,19 +1,12 @@
 package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
-import sk.stuba.fei.uim.vsa.pr2.service.CarParkFloorService;
 import sk.stuba.fei.uim.vsa.pr2.service.CarTypeService;
-import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarTypeDto;
-import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFloorResponseFactory;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarTypeResponseFactory;
 
 import java.util.List;
@@ -54,7 +47,18 @@ public class CarTypeController {
     }
 
     // TODO: POST
+    // TODO: POST VNORENY
     // TODO: PUT
-    // TODO: DELETE
+    @DELETE
+    @Path("/cartypes/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCarType(@PathParam("id") Long id){
+        CarType carType = service.deleteCarType(id);
+        if(carType == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }else{
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+    }
 
 }

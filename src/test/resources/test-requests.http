@@ -67,6 +67,10 @@ Accept: application/json
 GET http://localhost:8080/cartypes/10
 Accept: application/json
 
+###DELETE CARTYPE
+DELETE http://localhost:8080/cartypes/10
+Accept: application/json
+
 ###GET USERS
 GET http://localhost:8080/users
 Accept: application/json

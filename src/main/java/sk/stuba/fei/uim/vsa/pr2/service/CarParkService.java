@@ -72,6 +72,30 @@ public class CarParkService{
     }
 
     public CarPark deleteCarPark(Long carParkId) {
-        return null;
+        CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
+                .setParameter("id", carParkId)
+                .getSingleResult();
+
+        // Check childrens
+        List<CarParkFloor> carParkFloors = new CarParkFloorService().getCarParkFloors(carParkId);
+        if(!carParkFloors.isEmpty()){
+            CarParkFloorService carParkFloorService = new CarParkFloorService();
+            for(CarParkFloor floor : carParkFloors){
+                carParkFloorService.deleteCarParkFloor(carParkId, floor.getFloorIdentifier());
+            }
+        }
+
+        // Delete carpark
+        try{
+            et.begin();
+            em.createNamedQuery(CarPark.Queries.deleteById, CarPark.class)
+                    .setParameter("id", carParkId)
+                    .executeUpdate();
+            et.commit();
+        }catch(NoResultException | RollbackException r){
+            return null;
+        }
+        return carPark;
     }
 }
+
