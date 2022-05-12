@@ -8,10 +8,9 @@ import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
 import sk.stuba.fei.uim.vsa.pr2.service.CarParkFloorService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
-import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFloorResponseFactory;
+import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFloorFactory;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Path("/")
@@ -19,7 +18,7 @@ public class CarParkFloorController {
 
     private final ObjectMapper json = new ObjectMapper();
     private final CarParkFloorService service = new CarParkFloorService();
-    private final CarParkFloorResponseFactory factory = new CarParkFloorResponseFactory();
+    private final CarParkFloorFactory factory = new CarParkFloorFactory();
 
     @GET
     @Path("/carparkfloors/{id}")
@@ -62,7 +61,6 @@ public class CarParkFloorController {
         }
     }
     // TODO: IGNORE ID ATRRIBUTE IN JSON BODY
-    // TODO: PUT
     @DELETE
     @Path("/carparks/{id}/floors/{identifier}")
     @Produces(MediaType.APPLICATION_JSON)

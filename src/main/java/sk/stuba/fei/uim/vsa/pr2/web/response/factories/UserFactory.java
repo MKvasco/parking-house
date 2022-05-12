@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
+package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.domain.User;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserRequestFactory implements RequestFactory<User, UserDto> {
+public class UserFactory implements Factory<User, UserDto> {
     @Override
     public UserDto transformToDto(User entity) {
         UserDto userDto = new UserDto();
@@ -18,8 +18,8 @@ public class UserRequestFactory implements RequestFactory<User, UserDto> {
         userDto.setEmail(entity.getEmail());
         List<Car> cars = entity.getCars();
         if(!cars.isEmpty()){
-            CarRequestFactory carResponseFactory = new CarRequestFactory();
-            userDto.setCars(cars.stream().map(carResponseFactory::transformToDto).collect(Collectors.toList()));
+            CarFactory carFactory = new CarFactory();
+            userDto.setCars(cars.stream().map(carFactory::transformToDto).collect(Collectors.toList()));
         }else{
             userDto.setCars(new ArrayList<>());
         }

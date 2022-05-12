@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.service.CarService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarDto;
-import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarResponseFactory;
+import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ public class CarController {
 
     private final ObjectMapper json = new ObjectMapper();
     private final CarService service = new CarService();
-    private final CarResponseFactory factory = new CarResponseFactory();
+    private final CarFactory factory = new CarFactory();
 
     @GET
     @Path("/cars")

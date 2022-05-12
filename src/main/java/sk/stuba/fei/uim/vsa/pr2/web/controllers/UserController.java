@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.service.UserService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.UserDto;
-import sk.stuba.fei.uim.vsa.pr2.web.response.factories.UserResponseFactory;
+import sk.stuba.fei.uim.vsa.pr2.web.response.factories.UserFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class UserController {
     private final ObjectMapper json = new ObjectMapper();
     private final UserService service = new UserService();
-    private final UserResponseFactory factory = new UserResponseFactory();
+    private final UserFactory factory = new UserFactory();
 
     @GET
     @Path("/users")

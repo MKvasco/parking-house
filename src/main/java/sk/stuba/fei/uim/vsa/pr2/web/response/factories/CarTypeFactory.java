@@ -1,9 +1,10 @@
 package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
+import sk.stuba.fei.uim.vsa.pr2.service.CarTypeService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarTypeDto;
 
-public class CarTypeResponseFactory implements ResponseFactory<CarType, CarTypeDto> {
+public class CarTypeFactory implements Factory<CarType, CarTypeDto> {
 
     @Override
     public CarTypeDto transformToDto(CarType entity) {
@@ -15,6 +16,11 @@ public class CarTypeResponseFactory implements ResponseFactory<CarType, CarTypeD
 
     @Override
     public CarType transformToEntity(CarTypeDto dto) {
-        return null;
+        if(new CarTypeService().getCarType(dto.getName()) == null){
+            return new CarTypeService().createCarType(dto.getName());
+        }else{
+            return new CarTypeService().getCarType(dto.getName());
+        }
+
     }
 }

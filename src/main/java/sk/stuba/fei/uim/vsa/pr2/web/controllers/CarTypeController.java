@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
 import sk.stuba.fei.uim.vsa.pr2.service.CarTypeService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarTypeDto;
-import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarTypeResponseFactory;
+import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarTypeFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ public class CarTypeController {
 
     private final ObjectMapper json = new ObjectMapper();
     private final CarTypeService service = new CarTypeService();
-    private final CarTypeResponseFactory factory = new CarTypeResponseFactory();
+    private final CarTypeFactory factory = new CarTypeFactory();
 
     @GET
     @Path("/cartypes")
@@ -46,9 +46,7 @@ public class CarTypeController {
         }
     }
 
-    // TODO: POST
     // TODO: POST VNORENY
-    // TODO: PUT
     @DELETE
     @Path("/cartypes/{id}")
     @Produces(MediaType.APPLICATION_JSON)

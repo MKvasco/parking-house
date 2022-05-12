@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CarResponseFactory implements ResponseFactory<Car, CarDto> {
+public class CarFactory implements Factory<Car, CarDto> {
     @Override
     public CarDto transformToDto(Car entity) {
         CarDto carDto = new CarDto();
@@ -20,12 +20,12 @@ public class CarResponseFactory implements ResponseFactory<Car, CarDto> {
         carDto.setUser(null);
         carDto.setUser(entity.getUser().getId());
 
-        carDto.setCarType(new CarTypeResponseFactory().transformToDto(entity.getCarType()));
+        carDto.setCarType(new CarTypeFactory().transformToDto(entity.getCarType()));
 
         List<Reservation> reservations = entity.getReservations();
         if(!reservations.isEmpty()){
-            ReservationResponseFactory reservationResponseFactory = new ReservationResponseFactory();
-            carDto.setReservations(reservations.stream().map(reservationResponseFactory::transformToDto).collect(Collectors.toList()));
+            ReservationFactory reservationFactory = new ReservationFactory();
+            carDto.setReservations(reservations.stream().map(reservationFactory::transformToDto).collect(Collectors.toList()));
         }else{
             carDto.setReservations(new ArrayList<>());
         }

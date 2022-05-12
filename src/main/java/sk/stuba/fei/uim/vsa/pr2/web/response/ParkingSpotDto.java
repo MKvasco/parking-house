@@ -9,7 +9,7 @@ public class ParkingSpotDto{
     private String identifier;
     private String carParkFloor;
     private Long carPark;
-    private CarTypeDto carType;
+    private CarTypeDto type;
     private Boolean available;
     private List<ReservationDto> reservations;
 
@@ -32,8 +32,8 @@ public class ParkingSpotDto{
         return carPark;
     }
 
-    public CarTypeDto getCarType() {
-        return carType;
+    public CarTypeDto getType() {
+        return type;
     }
 
     public Boolean getFree() {
@@ -60,8 +60,8 @@ public class ParkingSpotDto{
         this.carPark = carPark;
     }
 
-    public void setCarType(CarTypeDto carType) {
-        this.carType = carType;
+    public void setType(CarTypeDto type) {
+        this.type = type;
     }
 
     public void setFree(Boolean available) {
@@ -70,5 +70,18 @@ public class ParkingSpotDto{
 
     public void setReservations(List<ReservationDto> reservations) {
         this.reservations = reservations;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingSpotDto{" +
+                "id=" + id +
+                ", identifier='" + identifier + '\'' +
+                ", carParkFloor='" + carParkFloor + '\'' +
+                ", carPark=" + carPark +
+                ", carType=" + type +
+                ", available=" + available +
+                ", reservations=" + reservations +
+                '}';
     }
 }

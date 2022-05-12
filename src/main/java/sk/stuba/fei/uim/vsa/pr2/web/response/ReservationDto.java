@@ -3,7 +3,7 @@ package sk.stuba.fei.uim.vsa.pr2.web.response;
 import java.util.Date;
 
 public class ReservationDto {
-
+    private Long id;
     private ParkingSpotDto parkingSpot;
     private CarDto car;
     private Integer price;
@@ -18,7 +18,11 @@ public class ReservationDto {
         this.endTime = endTime;
     }
 
-    public ParkingSpotDto getParkingSpot() {
+    public Long getId() {
+        return id;
+    }
+
+    public ParkingSpotDto getSpot() {
         return parkingSpot;
     }
 
@@ -26,15 +30,15 @@ public class ReservationDto {
         return car;
     }
 
-    public Integer getPrice() {
+    public Integer getPrices() {
         return price;
     }
 
-    public Date getStartTime() {
+    public Date getStart() {
         return startTime;
     }
 
-    public Date getEndTime() {
+    public Date getEnd() {
         return endTime;
     }
 

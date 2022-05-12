@@ -5,10 +5,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
-import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
 import sk.stuba.fei.uim.vsa.pr2.service.ParkingSpotService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.ParkingSpotDto;
-import sk.stuba.fei.uim.vsa.pr2.web.response.factories.ParkingSpotResponseFactory;
+import sk.stuba.fei.uim.vsa.pr2.web.response.factories.ParkingSpotFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 public class ParkingSpotController {
     private final ObjectMapper json = new ObjectMapper();
     private final ParkingSpotService service = new ParkingSpotService();
-    private final ParkingSpotResponseFactory factory = new ParkingSpotResponseFactory();
+    private final ParkingSpotFactory factory = new ParkingSpotFactory();
 
     @GET
     @Path("/carparks/{id}/spots")
@@ -58,7 +57,6 @@ public class ParkingSpotController {
             return Response.status(Response.Status.OK).entity(parkingSpotDto).build();
         }
     }
-    // TODO: PUT
     // TODO: POST
 
     @DELETE

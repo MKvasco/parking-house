@@ -17,11 +17,10 @@ public class ParkingSpotService {
     }
     public ParkingSpot createParkingSpot(Long carParkId, String floorIdentifier, String spotIdentifier){
         try{
-            // TODO: test this method multiple times because of cartype roolback
-            ParkingSpot parkingSpot = null;
             CarPark carPark = em.createNamedQuery(CarPark.Queries.findById, CarPark.class)
                     .setParameter("id", carParkId)
                     .getSingleResult();
+            ParkingSpot parkingSpot = null;
             List<CarParkFloor> carParkFloors = carPark.getCarParkFloors();
             for(CarParkFloor floor : carParkFloors){
                 List<ParkingSpot> parkingSpots = floor.getParkingSpots();

@@ -14,7 +14,6 @@ public class ServiceController {
     private final UserService userService;
     private final CarService carService;
 
-    // TODO: MAKE DELETE DOMAIN SERVICE METHODS!!!
     public ServiceController(){
         this.carParkService = new CarParkService();
         this.carParkFloorService = new CarParkFloorService();

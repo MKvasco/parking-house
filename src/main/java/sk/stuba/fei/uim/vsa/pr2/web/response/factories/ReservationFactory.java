@@ -1,9 +1,9 @@
-package sk.stuba.fei.uim.vsa.pr2.web.request.factory;
+package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
 import sk.stuba.fei.uim.vsa.pr2.web.response.ReservationDto;
 
-public class ReservationRequestFactory implements RequestFactory<Reservation, ReservationDto> {
+public class ReservationFactory implements Factory<Reservation, ReservationDto> {
     @Override
     public ReservationDto transformToDto(Reservation entity) {
         return null;
