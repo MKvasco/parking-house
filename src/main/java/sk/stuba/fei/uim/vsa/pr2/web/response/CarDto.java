@@ -9,8 +9,8 @@ public class CarDto {
     private String model;
     private String vrp;
     private String colour;
-    private CarTypeDto carType;
-    private Long userId;
+    private CarTypeDto type;
+    private UserWithCarsDto owner;
     private List<ReservationDto> reservations;
 
     public CarDto() {}
@@ -19,63 +19,77 @@ public class CarDto {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getBrand() {
         return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
     public String getModel() {
         return model;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public String getVrp() {
         return vrp;
-    }
-
-    public void setVrp(String vrp) {
-        this.vrp = vrp;
     }
 
     public String getColour() {
         return colour;
     }
 
-    public void setColour(String colour) {
-        this.colour = colour;
-    }
-
     public CarTypeDto getType() {
-        return carType;
+        return type;
     }
 
-    public void setCarType(CarTypeDto carType) {
-        this.carType = carType;
-    }
-
-    public Long getOwner() {
-        return userId;
-    }
-
-    public void setUser(Long userId) {
-        this.userId = userId;
+    public UserWithCarsDto getOwner() {
+        return owner;
     }
 
     public List<ReservationDto> getReservations() {
         return reservations;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setVrp(String vrp) {
+        this.vrp = vrp;
+    }
+
+    public void setColour(String colour) {
+        this.colour = colour;
+    }
+
+    public void setType(CarTypeDto type) {
+        this.type = type;
+    }
+
+    public void setOwner(UserWithCarsDto owner) {
+        this.owner = owner;
+    }
+
     public void setReservations(List<ReservationDto> reservations) {
         this.reservations = reservations;
+    }
+
+    @Override
+    public String toString() {
+        return "CarDto{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", vrp='" + vrp + '\'' +
+                ", colour='" + colour + '\'' +
+                ", carType=" + type +
+                ", user=" + owner +
+                ", reservations=" + reservations +
+                '}';
     }
 }

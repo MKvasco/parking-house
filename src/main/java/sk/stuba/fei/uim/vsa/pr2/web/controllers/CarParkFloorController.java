@@ -1,12 +1,12 @@
 package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
-import sk.stuba.fei.uim.vsa.pr2.service.CarParkFloorService;
+import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarParkFloorService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFloorFactory;
 
@@ -53,14 +53,18 @@ public class CarParkFloorController {
     public Response createCarParkFloor(@PathParam("id") Long id, String body){
         try{
             CarParkFloorDto carParkFloorDto = json.readValue(body, CarParkFloorDto.class);
-            CarParkFloor carParkFloor = service.createCarParkFloor(id, carParkFloorDto.getIdentifier());
+            CarParkFloor carParkFloor = factory.transformToEntity(carParkFloorDto);
+            // Testing if everything was posted
+            if(carParkFloor == null) throw new Exception();
+            for(ParkingSpot parkingSpot : carParkFloor.getParkingSpots()){
+                if (parkingSpot == null) throw new Exception();
+            }
             carParkFloorDto = factory.transformToDto(carParkFloor);
             return Response.status(Response.Status.CREATED).entity(carParkFloorDto).build();
-        }catch (JsonProcessingException e){
+        }catch (Exception e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
-    // TODO: IGNORE ID ATRRIBUTE IN JSON BODY
     @DELETE
     @Path("/carparks/{id}/floors/{identifier}")
     @Produces(MediaType.APPLICATION_JSON)

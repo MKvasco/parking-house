@@ -10,13 +10,8 @@ public class ReservationDto {
     private Date startTime;
     private Date endTime;
 
-    public ReservationDto(ParkingSpotDto parkingSpot, CarDto car, Integer price, Date startTime, Date endTime) {
-        this.parkingSpot = parkingSpot;
-        this.car = car;
-        this.price = price;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
+    public ReservationDto() {}
+
 
     public Long getId() {
         return id;

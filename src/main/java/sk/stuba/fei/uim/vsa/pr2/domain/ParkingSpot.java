@@ -24,6 +24,7 @@ public class ParkingSpot implements Serializable {
     private Long id;
 
     private String identifier;
+    private String floorIdentifier;
     @Transient
     private Boolean available = true;
 
@@ -46,6 +47,14 @@ public class ParkingSpot implements Serializable {
         this.identifier = identifier;
     }
     public ParkingSpot(){}
+
+    public String getFloorIdentifier() {
+        return floorIdentifier;
+    }
+
+    public void setFloorIdentifier(String floorIdentifier) {
+        this.floorIdentifier = floorIdentifier;
+    }
 
     public Long getId() {
         return id;

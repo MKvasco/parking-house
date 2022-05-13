@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.service;
+package sk.stuba.fei.uim.vsa.pr2.web.controllers.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;

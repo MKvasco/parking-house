@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.service;
+package sk.stuba.fei.uim.vsa.pr2.web.controllers.service;
 
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
@@ -35,6 +35,19 @@ public class CarParkFloorService {
             et.begin();
             CarParkFloor carParkFloor = new CarParkFloor(carPark, floorIdentifier);
             carPark.addCarParkFloor(carParkFloor);
+            em.persist(carParkFloor);
+            et.commit();
+            return carParkFloor;
+        }catch(NoResultException | RollbackException e){
+            return null;
+        }
+    }
+
+    public CarParkFloor createCarParkFloor(String floorIdentifier){
+        try{
+            et.begin();
+            CarParkFloor carParkFloor = new CarParkFloor();
+            carParkFloor.setFloorIdentifier(floorIdentifier);
             em.persist(carParkFloor);
             et.commit();
             return carParkFloor;

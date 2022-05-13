@@ -1,7 +1,7 @@
 package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
-import sk.stuba.fei.uim.vsa.pr2.service.CarTypeService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarTypeService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarTypeDto;
 
 public class CarTypeFactory implements Factory<CarType, CarTypeDto> {

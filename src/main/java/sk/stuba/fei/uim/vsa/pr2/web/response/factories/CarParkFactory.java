@@ -2,7 +2,7 @@ package sk.stuba.fei.uim.vsa.pr2.web.response.factories;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
-import sk.stuba.fei.uim.vsa.pr2.service.CarParkService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarParkService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
 
@@ -37,12 +37,9 @@ public class CarParkFactory implements Factory<CarPark, CarParkDto> {
         String name = dto.getName();
         String address = dto.getAddress();
         Integer price = dto.getPrice();
-        System.out.println(dto);
 
         CarPark carPark = new CarParkService().createCarPark(name, address, price);
-        if(carPark == null){
-            return null;
-        }
+        if(carPark == null) return null;
 
         List<CarParkFloorDto> carParkFloorDtoList = dto.getFloors();
         if(!carParkFloorDtoList.isEmpty()){

@@ -1,8 +1,7 @@
-package sk.stuba.fei.uim.vsa.pr2.service;
+package sk.stuba.fei.uim.vsa.pr2.web.controllers.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.*;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 public class ServiceController {

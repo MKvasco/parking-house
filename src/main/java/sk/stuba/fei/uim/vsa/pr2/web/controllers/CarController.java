@@ -1,17 +1,18 @@
 package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
-import sk.stuba.fei.uim.vsa.pr2.service.CarService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarFactory;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 @Path("/")
@@ -24,15 +25,68 @@ public class CarController {
     @GET
     @Path("/cars")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCarParks() {
-        // TODO: PARAMETER SEARCH
+    public Response getCars(@QueryParam("vrp") String vrp, @QueryParam("user") Long id) {
         List<Car> cars = service.getCars();
         List<CarDto> carDtoList = cars.stream().map(factory::transformToDto).collect(Collectors.toList());
-        if (carDtoList.isEmpty()) {
-            return Response.status(Response.Status.OK).entity("").build();
-        } else {
+        if(vrp != null && id != null){
+            List<CarDto> filteredCars = new ArrayList<>();
+            for(CarDto carDto : carDtoList){
+                if(Objects.equals(carDto.getOwner(), id) && Objects.equals(carDto.getVrp(), vrp)) filteredCars.add(carDto);
+            }
+            return Response.status(Response.Status.OK).entity(filteredCars).build();
+        }else {
+            if (vrp != null) {
+                List<CarDto> filteredCars = new ArrayList<>();
+                for (CarDto carDto : carDtoList) {
+                    if (Objects.equals(carDto.getVrp(), vrp)) filteredCars.add(carDto);
+                }
+                return Response.status(Response.Status.OK).entity(filteredCars).build();
+            }
+            if (id != null) {
+                List<CarDto> filteredCars = new ArrayList<>();
+                for (CarDto carDto : carDtoList) {
+                    if (Objects.equals(carDto.getOwner(), id)) filteredCars.add(carDto);
+                }
+                return Response.status(Response.Status.OK).entity(filteredCars).build();
+            }
             return Response.status(Response.Status.OK).entity(carDtoList).build();
         }
+    }
+
+    @GET
+    @Path("/cars/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCar(@PathParam("id") Long id){
+        Car car = service.getCar(id);
+        if(car == null) return Response.status(Response.Status.NOT_FOUND).build();
+        CarDto carDto = factory.transformToDto(car);
+        return Response.status(Response.Status.OK).entity(carDto).build();
+    }
+
+    @POST
+    @Path("/cars")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createCar(String body){
+        try{
+            CarDto carDto = json.readValue(body, CarDto.class);
+            Car car = factory.transformToEntity(carDto);
+            if(car == null) throw new Exception();
+            carDto = factory.transformToDto(car);
+            return Response.status(Response.Status.CREATED).entity(carDto).build();
+        }catch(Exception e){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @DELETE
+    @Path("/cars/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCar(@PathParam("id") Long id){
+        Car car = service.getCar(id);
+        if(car == null) return Response.status(Response.Status.NOT_FOUND).build();
+        service.deleteCar(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }
 

@@ -7,7 +7,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import sk.stuba.fei.uim.vsa.pr2.domain.*;
-import sk.stuba.fei.uim.vsa.pr2.service.ServiceController;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -71,12 +71,13 @@ public class Project2 {
         ParkingSpot parkingSpot2 = service.createParkingSpot(1L, "first_floor", "spot2", 10L);
         ParkingSpot parkingSpot3 = service.createParkingSpot(1L, "first_floor", "spot3", 9L);
         ParkingSpot parkingSpot4 = service.createParkingSpot(1L, "second_floor", "spot4", 10L);
+        ParkingSpot parkingSpot5 = service.createParkingSpot(1L, "second_floor", "spot5", 10L);
 
         User marco = service.createUser("Marco", "Kvasnica", "ahoj@ahoj.sk");
         User klara = service.createUser("Klara", "Vizarova", "cau@cau.sk");
 
         Car bmw = service.createCar(17L, "BMW", "7", "Black", "SC365EV", 9L);
-        Car audi = service.createCar(16L, "AUDI", "Q8", "Silver", "BL234EV", 10L);
+        Car audi = service.createCar(18L, "AUDI", "Q8", "Silver", "BL234EV", 10L);
     }
 
 }

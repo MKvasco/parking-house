@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.service;
+package sk.stuba.fei.uim.vsa.pr2.web.controllers.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
@@ -97,6 +97,18 @@ public class CarService {
         }
     }
     public Car deleteCar(Long carId) {
-        return null;
+        try{
+            Car car = em.createNamedQuery(Car.Queries.findById, Car.class)
+                    .setParameter("id", carId)
+                    .getSingleResult();
+            et.begin();
+            em.createNamedQuery(Car.Queries.deleteById, Car.class)
+                    .setParameter("id", carId)
+                    .executeUpdate();
+            et.commit();
+            return car;
+        }catch(RollbackException | NoResultException e){
+            return null;
+        }
     }
 }

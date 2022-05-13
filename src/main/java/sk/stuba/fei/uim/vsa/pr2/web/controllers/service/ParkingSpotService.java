@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.vsa.pr2.service;
+package sk.stuba.fei.uim.vsa.pr2.web.controllers.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.*;
 
@@ -68,6 +68,7 @@ public class ParkingSpotService {
                 if(Objects.equals(floor.getFloorIdentifier(), floorIdentifier)){
                     et.begin();
                     parkingSpot = new ParkingSpot(floor, carType, spotIdentifier);
+                    parkingSpot.setFloorIdentifier(floorIdentifier);
                     carType.addParkingSpot(parkingSpot);
                     floor.addParkingSpot(parkingSpot);
                     em.persist(parkingSpot);
@@ -76,6 +77,24 @@ public class ParkingSpotService {
             }
             return parkingSpot;
         }catch (RollbackException | NoResultException e){
+            return null;
+        }
+    }
+
+    public ParkingSpot createParkingSpot(String floorIdentifier, String spotIdentifier, Long carTypeId){
+        try{
+            CarType carType = em.createNamedQuery(CarType.Queries.findById, CarType.class)
+                            .setParameter("id", carTypeId)
+                            .getSingleResult();
+            et.begin();
+            ParkingSpot parkingSpot = new ParkingSpot();
+            parkingSpot.setFloorIdentifier(floorIdentifier);
+            parkingSpot.setIdentifier(spotIdentifier);
+            parkingSpot.setCarType(carType);
+            em.persist(parkingSpot);
+            et.commit();
+            return parkingSpot;
+        }catch (RollbackException e){
             return null;
         }
     }

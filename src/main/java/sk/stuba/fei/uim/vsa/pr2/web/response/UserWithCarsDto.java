@@ -2,15 +2,15 @@ package sk.stuba.fei.uim.vsa.pr2.web.response;
 
 import java.util.List;
 
-public class UserDto {
+public class UserWithCarsDto {
 
     private Long id;
     private String firstname;
     private String lastname;
     private String email;
-    private List<CarWithUsersDto> cars;
+    private List<Long> cars;
 
-    public UserDto() {}
+    public UserWithCarsDto() {}
 
     public Long getId() {
         return id;
@@ -44,17 +44,17 @@ public class UserDto {
         this.email = email;
     }
 
-    public List<CarWithUsersDto> getCars() {
+    public List<Long> getCars() {
         return cars;
     }
 
-    public void setCars(List<CarWithUsersDto> cars) {
+    public void setCars(List<Long> cars) {
         this.cars = cars;
     }
 
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "UserWithCarsDto{" +
                 "id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +

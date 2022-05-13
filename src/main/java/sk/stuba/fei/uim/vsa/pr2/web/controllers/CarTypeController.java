@@ -5,7 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
-import sk.stuba.fei.uim.vsa.pr2.service.CarTypeService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarTypeService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarTypeDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarTypeFactory;
 

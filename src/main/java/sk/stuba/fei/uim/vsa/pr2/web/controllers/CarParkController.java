@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
-import sk.stuba.fei.uim.vsa.pr2.service.CarParkService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarParkService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFactory;
 

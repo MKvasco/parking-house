@@ -77,15 +77,20 @@ GET http://localhost:8080/carparks/1/floors
 Accept: application/json
 
 ###POST FLOOR
-POST http://localhost:8080/carparks/3/floors
+POST http://localhost:8080/carparks/1/floors
 Accept: application/json
 
 {
-  "identifier": "osme_poschodie"
+  "identifier": "osme_poschodie",
+  "spots":[{"identifier":"88", "carParkFloor": "osme_poschodie", "type": {"name":"elektro"}}]
 }
 
 ###GET PARKING SPOTS
 GET http://localhost:8080/carparks/1/spots
+Accept: application/json
+
+###GET PARKING SPOTS
+GET http://localhost:8080/carparks/1/spots?free=false
 Accept: application/json
 
 ###GET PARKING SPOTS
@@ -95,6 +100,17 @@ Accept: application/json
 ###GET PARKING SPOTS ID
 GET http://localhost:8080/parkingspots/13
 Accept: application/json
+
+###POST PARKING SPOT
+POST http://localhost:8080/carparks/2/floors/first_floor/spots
+Accept: application/json
+
+{
+  "identifier": "140",
+  "carParkFloor": "first_floor",
+  "free": false,
+  "type": {"name":"uhlie"}
+}
 
 ###GET CARTYPES
 GET http://localhost:8080/cartypes
@@ -108,6 +124,26 @@ Accept: application/json
 DELETE http://localhost:8080/cartypes/10
 Accept: application/json
 
+###CREATE USER
+POST http://localhost:8080/users
+Accept: application/json
+
+{
+  "firstname": "Marko",
+  "lastname": "More",
+  "email": "Marko.More@sk.sk",
+  "cars" : [
+    {
+      "brand": "Mustang",
+      "model": "model123",
+      "vrp": "12312",
+      "colour": "metalic",
+      "type": { "name": "uhlie" },
+      "owner": { "firstname": "Marko", "lastname": "More", "email": "Marko.More@sk.sk" }
+    }
+  ]
+}
+
 ###GET USERS
 GET http://localhost:8080/users
 Accept: application/json
@@ -116,9 +152,41 @@ Accept: application/json
 GET http://localhost:8080/users/17
 Accept: application/json
 
+###CREATE  CAR
+POST http://localhost:8080/cars
+Accept: application/json
+
+{
+  "brand": "Mustang",
+  "model": "model123",
+  "vrp": "sc123",
+  "colour": "metalic",
+  "type": { "name":"coal" },
+  "owner": { "firstname": "Marco", "lastname": "kvasnica", "email": "hello@ja.com" }
+}
+
 ###GET CARS
 GET http://localhost:8080/cars
 Accept: application/json
+
+###GET CAR
+GET http://localhost:8080/cars/20
+
+###DELETE CAR
+DELETE http://localhost:8080/cars/20
+
+###GET USERS
+GET http://localhost:8080/users
+
+###GET USER
+GET http://localhost:8080/users/18
+
+###DELETE USER
+DELETE http://localhost:8080/users/18
+
+
+
+
 
 ### TESTS BY 3D
 ##############################################

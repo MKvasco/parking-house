@@ -25,7 +25,6 @@ public class Car implements Serializable {
     private String brand;
     private String model;
     private String colour;
-
     @Column(name = "VEHICLE_REGISTRATION_PLATE", unique = true)
     private String vehicleRegistrationPlate;
 
