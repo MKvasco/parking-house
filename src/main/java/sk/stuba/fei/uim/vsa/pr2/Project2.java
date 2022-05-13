@@ -7,6 +7,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import sk.stuba.fei.uim.vsa.pr2.domain.*;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ReservationService;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 
 import java.net.URI;
@@ -78,6 +79,11 @@ public class Project2 {
 
         Car bmw = service.createCar(17L, "BMW", "7", "Black", "SC365EV", 9L);
         Car audi = service.createCar(18L, "AUDI", "Q8", "Silver", "BL234EV", 10L);
+
+        Reservation reservation1 = service.createReservation(parkingSpot1.getId(), bmw.getId());
+        Reservation reservation4 = service.createReservation(parkingSpot2.getId(), audi.getId());
+        new ReservationService().endReservation(reservation1.getId());
+
     }
 
 }

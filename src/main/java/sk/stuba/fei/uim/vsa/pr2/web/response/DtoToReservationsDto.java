@@ -4,17 +4,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-public class ReservationDto {
+public class DtoToReservationsDto {
     private Long id;
-    private Long spot;
-    private Long car;
+    private ParkingSpotDto spot;
+    private CarDto car;
     private Integer prices;
     @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Europe/Bratislava")
     private Date start;
     @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Europe/Bratislava")
     private Date end;
 
-    public ReservationDto() {}
+    public DtoToReservationsDto() {
+    }
 
     public Long getId() {
         return id;
@@ -24,19 +25,19 @@ public class ReservationDto {
         this.id = id;
     }
 
-    public Long getSpot() {
+    public ParkingSpotDto getSpot() {
         return spot;
     }
 
-    public void setSpot(Long spot) {
+    public void setSpot(ParkingSpotDto spot) {
         this.spot = spot;
     }
 
-    public Long getCar() {
+    public CarDto getCar() {
         return car;
     }
 
-    public void setCar(Long car) {
+    public void setCar(CarDto car) {
         this.car = car;
     }
 
@@ -62,17 +63,5 @@ public class ReservationDto {
 
     public void setEnd(Date end) {
         this.end = end;
-    }
-
-    @Override
-    public String toString() {
-        return "ReservationDto{" +
-                "id=" + id +
-                ", spot=" + spot +
-                ", car=" + car +
-                ", prices=" + prices +
-                ", start=" + start +
-                ", end=" + end +
-                '}';
     }
 }

@@ -12,6 +12,7 @@ public class ServiceController {
     private final CarTypeService carTypeService;
     private final UserService userService;
     private final CarService carService;
+    private final ReservationService reservationService;
 
     public ServiceController(){
         this.carParkService = new CarParkService();
@@ -20,6 +21,7 @@ public class ServiceController {
         this.carTypeService = new CarTypeService();
         this.userService = new UserService();
         this.carService = new CarService();
+        this.reservationService = new ReservationService();
     }
     public CarPark createCarPark(String name, String address, Integer price) {
         return carParkService.createCarPark(name, address, price);
@@ -45,5 +47,8 @@ public class ServiceController {
 
     public Car createCar(Long userId, String brand, String model, String colour, String vrp, Long carTypeId ){
         return carService.createCar(userId, brand, model, colour, vrp, carTypeId);
+    }
+    public Reservation createReservation(Long parkingSpotId, Long carId){
+        return reservationService.createReservation(parkingSpotId, carId);
     }
 }

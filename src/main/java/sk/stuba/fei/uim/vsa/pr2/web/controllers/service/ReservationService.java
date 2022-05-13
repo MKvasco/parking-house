@@ -16,7 +16,7 @@ public class ReservationService {
     private final EntityManager em;
     private final EntityTransaction et;
 
-    protected ReservationService() {
+    public ReservationService() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         this.em = emf.createEntityManager();
         this.et = em.getTransaction();
@@ -36,6 +36,8 @@ public class ReservationService {
             parkingSpot.setAvailable(false);
             parkingSpot.addReservation(reservation);
             car.addReservation(reservation);
+            em.merge(car);
+            em.merge(parkingSpot);
             em.persist(reservation);
             et.commit();
             return  reservation;
@@ -70,10 +72,31 @@ public class ReservationService {
             et.begin();
             car.removeReservation(reservation);
             parkingSpot.setAvailable(true);
+            em.merge(parkingSpot);
+            em.merge(car);
             em.merge(reservation);
             et.commit();
             return reservation;
         }catch (NoResultException e){
+            return null;
+        }
+    }
+    public List<Reservation> getReservations(){
+        try{
+            List<Reservation> reservations = em.createNamedQuery(Reservation.Queries.findAll, Reservation.class).getResultList();
+            return reservations;
+        }catch(NoResultException e){
+            return null;
+        }
+    }
+
+    public Reservation getReservation(Long id){
+        try{
+            Reservation reservation = (Reservation) em.createNamedQuery(Reservation.Queries.findById)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            return reservation;
+        }catch(NoResultException e){
             return null;
         }
     }

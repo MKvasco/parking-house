@@ -6,6 +6,7 @@ import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarTypeService;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ParkingSpotService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.ParkingSpotDto;
+import sk.stuba.fei.uim.vsa.pr2.web.response.ReservationDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,15 @@ public class ParkingSpotFactory implements Factory<ParkingSpot, ParkingSpotDto> 
         if(!reservations.isEmpty()){
             ReservationFactory reservationFactory = new ReservationFactory();
             parkingSpotDto.setReservations(reservations.stream().map(reservationFactory::transformToDto).collect(Collectors.toList()));
+            for(ReservationDto reservation : parkingSpotDto.getReservations()){
+                if(reservation != null){
+                    if(reservation.getEnd() == null) parkingSpotDto.setFree(false);
+                }
+            }
         }else{
             parkingSpotDto.setReservations(new ArrayList<>());
         }
+
         return parkingSpotDto;
     }
 

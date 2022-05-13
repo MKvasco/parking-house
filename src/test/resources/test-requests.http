@@ -179,12 +179,45 @@ DELETE http://localhost:8080/cars/20
 GET http://localhost:8080/users
 
 ###GET USER
-GET http://localhost:8080/users/18
+GET http://localhost:8080/users/17
 
 ###DELETE USER
 DELETE http://localhost:8080/users/18
 
+###GET RESERVATIONS
+GET http://localhost:8080/reservations
 
+###GET RESERVATION
+GET http://localhost:8080/reservations/22
+
+###END RESERVATION
+POST http://localhost:8080/reservations/22/end
+Accept: application/json
+
+{
+}
+
+
+###CREATE RESERVATION
+POST http://localhost:8080/reservations
+Accept: application/json
+
+{
+    "car": {
+        "id": 19,
+        "brand": "BMW",
+        "model": "7",
+         "vrp": "SC365EV",
+         "colour": "Black",
+        "type" : { "name": "benzin" }
+        },
+    "spot": {
+        "id": 12,
+        "identifier": "spot1",
+        "carParkFloor": "first_floor",
+        "type" : { "name": "benzin" }
+        }
+}
 
 
 
