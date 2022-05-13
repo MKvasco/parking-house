@@ -2,10 +2,13 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
+import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ReservationService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 import sk.stuba.fei.uim.vsa.pr2.web.response.DtoToReservationsDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.DtoToReservationFactory;
 
@@ -25,7 +28,9 @@ public class ReservationController {
     @GET
     @Path("/reservations")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReservations(@QueryParam("user") Long userId, @QueryParam("spot") Long spotId, @QueryParam("date") Date date){
+    public Response getReservations(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @QueryParam("user") Long userId, @QueryParam("spot") Long spotId, @QueryParam("date") Date date){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         List<Reservation> reservations = service.getReservations();
         List<DtoToReservationsDto> reservatioDtoList = reservations.stream().map(factory::transformToDto).collect(Collectors.toList());
         if(userId != null){
@@ -42,7 +47,9 @@ public class ReservationController {
     @GET
     @Path("/reservations/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReservation(@PathParam("id") Long id){
+    public Response getReservation(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         Reservation reservation = service.getReservation(id);
         if(reservation == null) return Response.status(Response.Status.NOT_FOUND).build();
         DtoToReservationsDto reservationsDto = factory.transformToDto(reservation);
@@ -53,7 +60,9 @@ public class ReservationController {
     @Path("/reservations/{id}/end")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response endReservation(@PathParam("id") Long id){
+    public Response endReservation(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         Reservation reservation = service.getReservation(id);
         if(reservation == null) return Response.status(Response.Status.NOT_FOUND).build();
         service.endReservation(id);
@@ -64,7 +73,9 @@ public class ReservationController {
     @Path("/reservations")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createReservation(String body){
+    public Response createReservation(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, String body){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         try{
             DtoToReservationsDto reservationsDto = json.readValue(body, DtoToReservationsDto.class);
             Reservation reservation = factory.transformToEntity(reservationsDto);

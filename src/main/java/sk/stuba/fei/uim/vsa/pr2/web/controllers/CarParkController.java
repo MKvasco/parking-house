@@ -2,12 +2,15 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarPark;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
+import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarParkService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFactory;
 
@@ -25,7 +28,9 @@ public class CarParkController {
     @GET
     @Path("/carparks")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCarParks(@QueryParam("name") String name) {
+    public Response getCarParks(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @QueryParam("name") String name) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         if(name != null){
             CarPark carPark = service.getCarPark(name);
             if(carPark == null){
@@ -48,7 +53,9 @@ public class CarParkController {
     @GET
     @Path("/carparks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCarParks(@PathParam("id") Long id){
+    public Response getCarParks(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         CarPark carPark = service.getCarPark(id);
         if(carPark == null){
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -61,7 +68,9 @@ public class CarParkController {
     @Path("/carparks")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCarPark(String body) {
+    public Response createCarPark(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, String body) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         try{
             CarParkDto carParkDto = json.readValue(body, CarParkDto.class);
 
@@ -92,7 +101,9 @@ public class CarParkController {
     @DELETE
     @Path("/carparks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCarPark(@PathParam("id") Long id) {
+    public Response deleteCarPark(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         CarPark carParkToDelete =  service.deleteCarPark(id);
         if(carParkToDelete == null){
             return Response.status(Response.Status.NOT_FOUND).build();

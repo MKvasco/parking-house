@@ -2,11 +2,14 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.CarParkFloor;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
+import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarParkFloorService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarParkFloorDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarParkFloorFactory;
 
@@ -23,7 +26,9 @@ public class CarParkFloorController {
     @GET
     @Path("/carparkfloors/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCarParkFloor(@PathParam("id") Long id) {
+    public Response getCarParkFloor(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         CarParkFloor carParkFloor = service.getCarParkFloor(id);
         if(carParkFloor == null){
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -36,8 +41,9 @@ public class CarParkFloorController {
     @GET
     @Path("/carparks/{id}/floors")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCarParkFloors(@PathParam("id") Long id) {
-        // TODO: CHECK IF CARPARK EXISTS
+    public Response getCarParkFloors(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         List<CarParkFloor> carParkFloors = service.getCarParkFloors(id);
         List<CarParkFloorDto> carParkFloorDtoList = carParkFloors.stream().map(factory::transformToDto).collect(Collectors.toList());
         if (carParkFloorDtoList.isEmpty()) {
@@ -50,7 +56,9 @@ public class CarParkFloorController {
     @Path("/carparks/{id}/floors")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCarParkFloor(@PathParam("id") Long id, String body){
+    public Response createCarParkFloor(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id, String body){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         try{
             CarParkFloorDto carParkFloorDto = json.readValue(body, CarParkFloorDto.class);
             CarParkFloor carParkFloor = factory.transformToEntity(carParkFloorDto);
@@ -68,7 +76,9 @@ public class CarParkFloorController {
     @DELETE
     @Path("/carparks/{id}/floors/{identifier}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCarParkFloor(@PathParam("id") Long id, @PathParam("identifier") String identifier){
+    public Response deleteCarParkFloor(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id, @PathParam("identifier") String identifier){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
        CarParkFloor carParkFloor = service.deleteCarParkFloor(id, identifier);
        if(carParkFloor == null){
            return Response.status(Response.Status.NOT_FOUND).build();

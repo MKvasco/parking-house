@@ -2,10 +2,13 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.ParkingSpot;
+import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ParkingSpotService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 import sk.stuba.fei.uim.vsa.pr2.web.response.ParkingSpotDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.ParkingSpotFactory;
 
@@ -22,7 +25,7 @@ public class ParkingSpotController {
     @GET
     @Path("/carparks/{id}/spots")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getParkingSpots(@PathParam("id") Long id, @QueryParam("free") Boolean free) {
+    public Response getParkingSpots(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id, @QueryParam("free") Boolean free) {
         List<ParkingSpot> parkingSpots = service.getParkingSpots(id);
         // For testing purposes
 //        for(ParkingSpot parkingSpot : parkingSpots){
@@ -47,7 +50,7 @@ public class ParkingSpotController {
     @GET
     @Path("/carparks/{id}/floors/{identifier}/spots")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getParkingSpots(@PathParam("id") Long id, @PathParam("identifier") String identifier){
+    public Response getParkingSpots(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id, @PathParam("identifier") String identifier){
         List<ParkingSpot> parkingSpots = service.getParkingSpots(id, identifier);
         List<ParkingSpotDto> parkingSpotDtoList = parkingSpots.stream().map(factory::transformToDto).collect(Collectors.toList());
         if(parkingSpotDtoList.isEmpty()){
@@ -60,7 +63,9 @@ public class ParkingSpotController {
     @GET
     @Path("/parkingspots/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getParkingSpot(@PathParam("id") Long id){
+    public Response getParkingSpot(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         ParkingSpot parkingSpot = service.getParkingSpot(id);
         ParkingSpotDto parkingSpotDto = factory.transformToDto(parkingSpot);
         if(parkingSpotDto == null){
@@ -74,7 +79,9 @@ public class ParkingSpotController {
     @Path("/carparks/{id}/floors/{identifier}/spots")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createParkingSpot(@PathParam("id") Long carParkId,@PathParam("identifier") String identifier, String body){
+    public Response createParkingSpot(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long carParkId,@PathParam("identifier") String identifier, String body){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         try{
             ParkingSpotDto parkingSpotDto = json.readValue(body, ParkingSpotDto.class);
             parkingSpotDto.setCarPark(carParkId);
@@ -90,7 +97,9 @@ public class ParkingSpotController {
     @DELETE
     @Path("/parkingspots/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteParkingSpot(@PathParam("id") Long id){
+    public Response deleteParkingSpot(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         ParkingSpot parkingSpot = service.deleteParkingSpot(id);
         if(parkingSpot == null){
             return Response.status(Response.Status.NOT_FOUND).build();

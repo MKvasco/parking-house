@@ -2,7 +2,9 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers.service;
 
 import sk.stuba.fei.uim.vsa.pr2.domain.*;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 public class ServiceController {
 
@@ -50,5 +52,27 @@ public class ServiceController {
     }
     public Reservation createReservation(Long parkingSpotId, Long carId){
         return reservationService.createReservation(parkingSpotId, carId);
+    }
+    public User getUserAuth (String auth){
+        String base64Encoded = auth.substring("Basic ".length());
+        String decoded = new String(Base64.getDecoder().decode(base64Encoded));
+        String[] accountDetails;
+        try {
+            accountDetails  = decoded.split(":");
+        }catch (PatternSyntaxException e){
+            return null;
+        }
+        if (accountDetails.length != 2)
+            return null;
+        if (!accountDetails[1].matches("-?\\d+(\\.\\d+)?"))
+            return null;
+        User user = userService.getUser(accountDetails[0]);
+        User user2 = userService.getUser((long) Integer.parseInt(accountDetails[1]));
+        if (user == null || user2 == null)
+            return null;
+        if(!user.getId().equals(user2.getId()))
+            return null;
+
+        return user;
     }
 }

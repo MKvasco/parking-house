@@ -54,31 +54,32 @@ public class Project2 {
 
     public static void postStart() {
         ServiceController service = new ServiceController();
+        User user = service.createUser("vsa", "vsa", "admin@vsa.sk");
         CarPark avion =  service.createCarPark("Avion", "Ivanska cesta", 2);
         CarPark aupark =  service.createCarPark("Aupark", "Petrzalka", 3);
         CarPark vivo =  service.createCarPark("Vivo", "Nove Mesto", 1);
-
+//
         CarParkFloor first_floor_avion = service.createCarParkFloor("first_floor", avion,new ArrayList<>());
         CarParkFloor second_floor_avion = service.createCarParkFloor("second_floor", avion, new ArrayList<>());
         CarParkFloor third_floor_avion = service.createCarParkFloor("third_floor", avion, new ArrayList<>());
         CarParkFloor first_floor_aupark = service.createCarParkFloor("first_floor", aupark, new ArrayList<>());
         CarParkFloor second_floor_aupark = service.createCarParkFloor("second_floor", aupark, new ArrayList<>());
-
+//
         CarType benzin =  service.createCarType("benzin");
         CarType nafta =  service.createCarType("nafta");
         CarType elektro =  service.createCarType("elektro");
-
-        ParkingSpot parkingSpot1 = service.createParkingSpot(1L, "first_floor", "spot1", 9L);
-        ParkingSpot parkingSpot2 = service.createParkingSpot(1L, "first_floor", "spot2", 10L);
-        ParkingSpot parkingSpot3 = service.createParkingSpot(1L, "first_floor", "spot3", 9L);
-        ParkingSpot parkingSpot4 = service.createParkingSpot(1L, "second_floor", "spot4", 10L);
-        ParkingSpot parkingSpot5 = service.createParkingSpot(1L, "second_floor", "spot5", 10L);
+//
+        ParkingSpot parkingSpot1 = service.createParkingSpot(2L, "first_floor", "spot1", 10L);
+        ParkingSpot parkingSpot2 = service.createParkingSpot(2L, "first_floor", "spot2", 11L);
+        ParkingSpot parkingSpot3 = service.createParkingSpot(2L, "first_floor", "spot3", 10L);
+        ParkingSpot parkingSpot4 = service.createParkingSpot(2L, "second_floor", "spot4", 11L);
+        ParkingSpot parkingSpot5 = service.createParkingSpot(2L, "second_floor", "spot5", 11L);
 
         User marco = service.createUser("Marco", "Kvasnica", "ahoj@ahoj.sk");
         User klara = service.createUser("Klara", "Vizarova", "cau@cau.sk");
 
-        Car bmw = service.createCar(17L, "BMW", "7", "Black", "SC365EV", 9L);
-        Car audi = service.createCar(18L, "AUDI", "Q8", "Silver", "BL234EV", 10L);
+        Car bmw = service.createCar(18L, "BMW", "7", "Black", "SC365EV", 10L);
+        Car audi = service.createCar(19L, "AUDI", "Q8", "Silver", "BL234EV", 11L);
 
         Reservation reservation1 = service.createReservation(parkingSpot1.getId(), bmw.getId());
         Reservation reservation4 = service.createReservation(parkingSpot2.getId(), audi.getId());

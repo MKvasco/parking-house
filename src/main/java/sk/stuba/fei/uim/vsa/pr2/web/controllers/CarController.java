@@ -2,10 +2,13 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.Car;
+import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarService;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarFactory;
 
@@ -25,7 +28,9 @@ public class CarController {
     @GET
     @Path("/cars")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCars(@QueryParam("vrp") String vrp, @QueryParam("user") Long id) {
+    public Response getCars(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @QueryParam("vrp") String vrp, @QueryParam("user") Long id) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         List<Car> cars = service.getCars();
         List<CarDto> carDtoList = cars.stream().map(factory::transformToDto).collect(Collectors.toList());
         if(vrp != null && id != null){
@@ -56,7 +61,9 @@ public class CarController {
     @GET
     @Path("/cars/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCar(@PathParam("id") Long id){
+    public Response getCar(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         Car car = service.getCar(id);
         if(car == null) return Response.status(Response.Status.NOT_FOUND).build();
         CarDto carDto = factory.transformToDto(car);
@@ -67,7 +74,9 @@ public class CarController {
     @Path("/cars")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCar(String body){
+    public Response createCar(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, String body){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         try{
             CarDto carDto = json.readValue(body, CarDto.class);
             Car car = factory.transformToEntity(carDto);
@@ -82,7 +91,9 @@ public class CarController {
     @DELETE
     @Path("/cars/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCar(@PathParam("id") Long id){
+    public Response deleteCar(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,@PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         Car car = service.getCar(id);
         if(car == null) return Response.status(Response.Status.NOT_FOUND).build();
         service.deleteCar(id);

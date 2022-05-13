@@ -167,11 +167,12 @@ Accept: application/json
 
 ###GET CARS
 GET http://localhost:8080/cars
+
 Accept: application/json
 
 ###GET CAR
-GET http://localhost:8080/cars/20
-
+GET http://localhost:8080/cars/21
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 ###DELETE CAR
 DELETE http://localhost:8080/cars/20
 
