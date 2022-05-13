@@ -15,7 +15,6 @@ import sk.stuba.fei.uim.vsa.pr2.web.response.factories.CarFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 @Path("/")
@@ -91,7 +90,7 @@ public class CarController {
     @DELETE
     @Path("/cars/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCar(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,@PathParam("id") Long id){
+    public Response deleteCar(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
         User userAuth = new ServiceController().getUserAuth(authorization);
         if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         Car car = service.getCar(id);

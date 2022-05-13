@@ -2,10 +2,12 @@ package sk.stuba.fei.uim.vsa.pr2.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
 import sk.stuba.fei.uim.vsa.pr2.domain.User;
+import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.ServiceController;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.UserService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.UserDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.factories.UserFactory;
@@ -24,7 +26,9 @@ public class UserController {
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers(@QueryParam("email") String email) {
+    public Response getUsers(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @QueryParam("email") String email) {
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         List<User> users = service.getUsers();
         List<UserDto> userDtoList = users.stream().map(factory::transformToDto).collect(Collectors.toList());
         if(email != null){
@@ -41,7 +45,9 @@ public class UserController {
     @GET
     @Path("/users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("id") Long id){
+    public Response getUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         User user = service.getUser(id);
         UserDto userDto = factory.transformToDto(user);
         if(userDto == null){
@@ -54,7 +60,9 @@ public class UserController {
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUser(String body){
+    public Response createUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, String body){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         try{
             UserDto userDto = json.readValue(body, UserDto.class);
             User user = factory.transformToEntity(userDto);
@@ -70,7 +78,9 @@ public class UserController {
     @DELETE
     @Path("/users/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Long id){
+    public Response deleteUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization, @PathParam("id") Long id){
+        User userAuth = new ServiceController().getUserAuth(authorization);
+        if (userAuth == null) return Response.status(Response.Status.UNAUTHORIZED).build();
         User user = service.getUser(id);
         if(user == null) return Response.status(Response.Status.NOT_FOUND).build();
         service.deleteUser(id);

@@ -54,6 +54,7 @@ public class ServiceController {
         return reservationService.createReservation(parkingSpotId, carId);
     }
     public User getUserAuth (String auth){
+        if(auth == null) return null;
         String base64Encoded = auth.substring("Basic ".length());
         String decoded = new String(Base64.getDecoder().decode(base64Encoded));
         String[] accountDetails;
