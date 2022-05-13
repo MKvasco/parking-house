@@ -21,7 +21,7 @@ public class CarParkFactory implements Factory<CarPark, CarParkDto> {
         carParkDto.setId(id);
         carParkDto.setName(name);
         carParkDto.setAddress(address);
-        carParkDto.setPrice(price);
+        carParkDto.setPrices(price);
         List<CarParkFloor> carParkFloors = entity.getCarParkFloors();
         if(!carParkFloors.isEmpty()){
             CarParkFloorFactory carParkFloorFactory = new CarParkFloorFactory();
@@ -36,7 +36,7 @@ public class CarParkFactory implements Factory<CarPark, CarParkDto> {
     public CarPark transformToEntity(CarParkDto dto) {
         String name = dto.getName();
         String address = dto.getAddress();
-        Integer price = dto.getPrice();
+        Integer price = dto.getPrices();
 
         CarPark carPark = new CarParkService().createCarPark(name, address, price);
         if(carPark == null) return null;

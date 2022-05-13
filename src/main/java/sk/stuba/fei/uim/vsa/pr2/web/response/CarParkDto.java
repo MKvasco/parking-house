@@ -7,7 +7,7 @@ public class CarParkDto {
     private Long id;
     private String name;
     private String address;
-    private Integer price;
+    private Integer prices;
     private List<CarParkFloorDto> floors;
 
     public Long getId() {
@@ -23,8 +23,8 @@ public class CarParkDto {
         return address;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getPrices() {
+        return prices;
     }
 
     public List<CarParkFloorDto> getFloors() {
@@ -42,8 +42,8 @@ public class CarParkDto {
         this.address = address;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setPrices(Integer prices) {
+        this.prices = prices;
     }
 
     public void setFloors(List<CarParkFloorDto> floors) {
@@ -55,7 +55,7 @@ public class CarParkDto {
         return "CarParkDto{" +
                 "name='" + name + '\'' +
                 ", address='" + address + '\'' +
-                ", price=" + price +
+                ", price=" + prices +
                 ", floors=" + floors +
                 '}';
     }

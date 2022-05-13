@@ -1,6 +1,5 @@
 package sk.stuba.fei.uim.vsa.pr2.web.response;
 
-import java.util.Date;
 import java.util.List;
 
 public class ParkingSpotDto{
@@ -10,7 +9,7 @@ public class ParkingSpotDto{
     private String carParkFloor;
     private Long carPark;
     private CarTypeDto type;
-    private Boolean available;
+    private Boolean free;
     private List<ReservationDto> reservations;
 
     public ParkingSpotDto(){
@@ -37,7 +36,7 @@ public class ParkingSpotDto{
     }
 
     public Boolean getFree() {
-        return available;
+        return free;
     }
 
     public List<ReservationDto> getReservations() {
@@ -65,7 +64,7 @@ public class ParkingSpotDto{
     }
 
     public void setFree(Boolean available) {
-        this.available = available;
+        this.free = available;
     }
 
     public void setReservations(List<ReservationDto> reservations) {
@@ -80,7 +79,7 @@ public class ParkingSpotDto{
                 ", carParkFloor='" + carParkFloor + '\'' +
                 ", carPark=" + carPark +
                 ", carType=" + type +
-                ", available=" + available +
+                ", available=" + free +
                 ", reservations=" + reservations +
                 '}';
     }

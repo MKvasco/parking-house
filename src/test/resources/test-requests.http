@@ -1,3 +1,4 @@
+
 ###GET CARPARKS
 GET http://localhost:8080/carparks
 
@@ -6,6 +7,34 @@ GET http://localhost:8080/carparks?name=Avion
 
 ###GET CARPARKS WITH ID
 GET http://localhost:8080/carparks/2
+
+###Create car w user
+POST http://localhost:8080/cars
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
+
+{
+  "brand": "brand",
+  "model": "model",
+  "vrp": "BA3216to1",
+  "colour": "blue",
+  "type": {"name":"uhlie" },
+  "owner": {
+    "firstName": "first",
+    "lastName": "last",
+    "email": "my35o1@email.com"
+    }
+}
+
+###CREATE USER
+POST http://localhost:8080/users
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
+Accept: application/json
+
+{
+  "firstName": "user0",
+  "lastName": "last0",
+  "email": "my0@email.com"
+}
 
 ###POST CARPARK
 POST http://localhost:8080/carparks
@@ -22,12 +51,13 @@ Accept: application/json
 ###POST CARPARK
 POST http://localhost:8080/carparks
 Accept: application/json
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 
 {
   "id": 1,
   "name": "bory",
   "address": "Zahorska Bystrica",
-  "price": 2,
+  "prices": 2,
   "floors": [
      {
       "identifier": "AnoAno",
@@ -102,7 +132,8 @@ GET http://localhost:8080/parkingspots/13
 Accept: application/json
 
 ###POST PARKING SPOT
-POST http://localhost:8080/carparks/2/floors/first_floor/spots
+POST http://localhost:8080/carparks/3/floors/first_floor/spots
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 Accept: application/json
 
 {
@@ -114,10 +145,12 @@ Accept: application/json
 
 ###GET CARTYPES
 GET http://localhost:8080/cartypes
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 Accept: application/json
 
 ###GET CARTYPE
-GET http://localhost:8080/cartypes/10
+GET http://localhost:8080/cartypes/12
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 Accept: application/json
 
 ###DELETE CARTYPE
@@ -126,11 +159,12 @@ Accept: application/json
 
 ###CREATE USER
 POST http://localhost:8080/users
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 Accept: application/json
 
 {
-  "firstname": "Marko",
-  "lastname": "More",
+  "firstName": "Marko",
+  "lastName": "More",
   "email": "Marko.More@sk.sk",
   "cars" : [
     {
@@ -139,13 +173,14 @@ Accept: application/json
       "vrp": "12312",
       "colour": "metalic",
       "type": { "name": "uhlie" },
-      "owner": { "firstname": "Marko", "lastname": "More", "email": "Marko.More@sk.sk" }
+      "owner": { "firstName": "Marko", "lastName": "More", "email": "Marko.More@sk.sk" }
     }
   ]
 }
 
 ###GET USERS
 GET http://localhost:8080/users
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 Accept: application/json
 
 ###GET USER
@@ -154,6 +189,7 @@ Accept: application/json
 
 ###CREATE  CAR
 POST http://localhost:8080/cars
+Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 Accept: application/json
 
 {
@@ -162,7 +198,7 @@ Accept: application/json
   "vrp": "sc123",
   "colour": "metalic",
   "type": { "name":"coal" },
-  "owner": { "firstname": "Marco", "lastname": "kvasnica", "email": "hello@ja.com" }
+  "owner": { "firstName": "Marco", "lastName": "kvasnica", "email": "hello@ja.com" }
 }
 
 ###GET CARS
@@ -220,17 +256,6 @@ Accept: application/json
         }
 }
 
-
-
-### TESTS BY 3D
-##############################################
-##############################################
-##############################################
-##############################################
-##############################################
-##############################################
-##############################################
-
 ###Create user
 POST http://localhost:8080/users
 Authorization: Basic YWRtaW5AdnNhLnNrOjE=
@@ -257,7 +282,7 @@ Authorization: Basic YWRtaW5AdnNhLnNrOjE=
 
 ###GET created USERS W id
 GET http://localhost:8080/users/{{deluserid}}
-Authorization: Basic YWRtaW5AdnNhLnNrOjE=
+
 
 > {%
     client.test("Request executed successfully", function() {
@@ -268,33 +293,6 @@ Authorization: Basic YWRtaW5AdnNhLnNrOjE=
         client.assert(response.body.id == client.global.get("deluserid"), "id is not correct, provided:"+response.body.id+" instead "+client.global.get("deluserid"));
     });
 
-%}
-
-###Create car w user
-POST http://localhost:8080/cars
-Authorization: Basic YWRtaW5AdnNhLnNrOjE=
-
-{
-  "brand": "brand",
-  "model": "model",
-  "vrp": "BA3216to1",
-  "colour": "blue",
-  "owner": {
-    "firstName": "first",
-    "lastName": "last",
-    "email": "my35o1@email.com"
-    }
-}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 201, "Response status is not 201");
-    });
-
-    client.test("Response content-type is json", function() {
-        var type = response.contentType.mimeType;
-        client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
-    });
 %}
 
 
@@ -1980,24 +1978,4 @@ Authorization: Basic YWRtaW5AdnNhLnNrOjE=
             client.assert(spot.carPark == client.global.get("cpid"), "Spot carpark is "+spot.carPark+" but required is "+client.global.get("cpid"));
         })
     });
-%}
-
-
-###GET SPOTS FROM FLOOR
-GET http://localhost:8080/carparks/{{cpid}}/floors/F1/spots
-Authorization: Basic YWRtaW5AdnNhLnNrOjE=
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200");
-    });
-
-    client.test("Response content-type is json", function() {
-        var type = response.contentType.mimeType;
-        client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
-    });
-
-    client.test("spot length is 3", function() {
-        client.assert(response.body.length === 3, "Response status.");
-        });
 %}

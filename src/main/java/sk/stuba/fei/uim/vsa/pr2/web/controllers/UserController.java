@@ -67,7 +67,6 @@ public class UserController {
             UserDto userDto = json.readValue(body, UserDto.class);
             User user = factory.transformToEntity(userDto);
             if(user == null) throw new Exception();
-            System.out.println(user);
             userDto = factory.transformToDto(user);
             return Response.status(Response.Status.CREATED).entity(userDto).build();
         }catch(Exception e){

@@ -5,7 +5,6 @@ import sk.stuba.fei.uim.vsa.pr2.domain.CarType;
 import sk.stuba.fei.uim.vsa.pr2.domain.Reservation;
 import sk.stuba.fei.uim.vsa.pr2.domain.User;
 import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.CarService;
-import sk.stuba.fei.uim.vsa.pr2.web.controllers.service.UserService;
 import sk.stuba.fei.uim.vsa.pr2.web.response.CarDto;
 import sk.stuba.fei.uim.vsa.pr2.web.response.ReservationDto;
 
